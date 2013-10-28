@@ -2,6 +2,7 @@
 *.slo
 *.lo
 *.o
+*.x86-win32
 
 # Compiled Dynamic libraries
 *.so
