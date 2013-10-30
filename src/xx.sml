@@ -6,4 +6,4 @@ fun main (prog_name: string, args: string list) =
     end
  
 
-(*SMLofNJ.exportFn ("xx", main)*)
+val _ = SMLofNJ.exportFn ("xx", main)
