@@ -43,4 +43,4 @@ fun main (prog_name: string, args: string list) =
 		    | _ => main (prog_name, args)
 			
 
-(*val _ = SMLofNJ.exportFn ("xx", main)*)
+val _ = SMLofNJ.exportFn ("xx", main)
