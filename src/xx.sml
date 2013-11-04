@@ -1,21 +1,24 @@
-val y_dim = 10
 val x_dim = 22
+val y_dim = 10
+val arr = Array.array(x_dim, Array.array(y_dim, "."))
 
+fun arr_sub arr x y =
+    Array.sub(Array.sub(arr, x), y)
 
-fun print_char (character) =
-    print ((Char.toString character)^" ")
+val sub = arr_sub arr
 
-fun print_arr (arr: char array array) =
+(*fun print_char (character) =
+    print ((Char.toString character)^" ") *)
+
+fun print_arr (arr) =
     let
 	fun print_arr_col (row,col) =
-	    if col < y_dim
-	    then (print_char (Array.sub(
-		       Array.sub(arr, row),
-		       col));
+	    if col < Array.length(Array.sub(arr,0))
+	    then (print ((sub row col)^" ");
 		  print_arr_col(row, col+1))
 	    else ()
 	fun print_arr_row (row) =
-	    if row < x_dim
+	    if row < Array.length(arr)
 	    then (print_arr_col(row,0);
 		  print "\n";
 		  print_arr_row(row+1))
@@ -24,23 +27,29 @@ fun print_arr (arr: char array array) =
 	print_arr_row (0)
     end
 
+fun ask_given_row () =
+    String.tokens Char.isSpace (valOf (TextIO.inputLine TextIO.stdIn))
 
-fun create_array () =
+fun ask_given () =
     let
-	val arr = Array.array(x_dim, Array.array(y_dim, #"."))
-    in
-	print_arr arr
+	fun aux n = if n >= Array.length(arr)
+		    then ()
+		    else (Array.update(arr, n,
+				      Array.fromList (ask_given_row()));
+			  aux (n+1))
+    in aux 0
     end
-
 
 fun main (prog_name: string, args: string list) =
     case TextIO.inputLine TextIO.stdIn of
 	NONE => main (prog_name, args)
       | SOME x => case Char.fromString x of
 		      SOME #"q" => OS.Process.success
-		    | SOME #"p" => (create_array ();
+		    | SOME #"p" => (print_arr arr;
 				    main(prog_name, args))
+		    | SOME #"g" => (ask_given();
+				    main(prog_name, args)) 
 		    | _ => main (prog_name, args)
 			
 
-val _ = SMLofNJ.exportFn ("xx", main)
+val _ = SMLofNJ.exportFn ("xx", main) 
