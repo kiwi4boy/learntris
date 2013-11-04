@@ -63,14 +63,9 @@ def parse_test(lines):
         else:                          # expected output
             yield ('out', sline)
 
-<<<<<<< HEAD
-def spawn(program_args):
-    return subprocess.Popen(program_args,
-=======
 def spawn(program_args, use_shell):
     return subprocess.Popen(program_args,
                             shell=use_shell,
->>>>>>> 1e17b615102322898168a5d4aa35efffbd2e299c
                             stdin=subprocess.PIPE,
                             stdout=subprocess.PIPE)
 
@@ -118,15 +113,9 @@ def run_test(program, opcodes):
         raise TestFailure('output mismatch:\n%s'
                           % pprint.pformat(diff))
 
-<<<<<<< HEAD
-def run_tests(program_args):
-    for i, test in enumerate(extract.tests()):
-        program = spawn(program_args)
-=======
 def run_tests(program_args, use_shell):
     for i, test in enumerate(extract.tests()):
         program = spawn(program_args, use_shell)
->>>>>>> 1e17b615102322898168a5d4aa35efffbd2e299c
         opcodes = list(parse_test(test.lines))
         print("Running test %d: %s" % (i+1, test.name))
         try:
@@ -140,17 +129,12 @@ def run_tests(program_args, use_shell):
 def find_learntris():
     default = "./learntris"
     program_args = sys.argv[1:] if len(sys.argv) >= 2 else [default]
-<<<<<<< HEAD
-    if os.path.exists(program_args[0]):
-        return program_args
-=======
     use_shell = False
     if "--shell" in program_args: # --shell option
         use_shell = True
         program_args.remove("--shell")
     if os.path.exists(program_args[0]):
         return (program_args, use_shell)
->>>>>>> 1e17b615102322898168a5d4aa35efffbd2e299c
 
     if program_args[0] == default:
         print(__doc__)
@@ -161,11 +145,7 @@ def find_learntris():
 
 def main():
     program_args = find_learntris()
-<<<<<<< HEAD
-    if program_args: run_tests(program_args)
-=======
     if program_args: run_tests(program_args[0], program_args[1])
->>>>>>> 1e17b615102322898168a5d4aa35efffbd2e299c
 
 if __name__ == '__main__':
     main()
