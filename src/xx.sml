@@ -10,6 +10,8 @@ fun chg lst =
 	(map (fn str => Array.fromList(map Char.toString (explode(str))))
 	     lst)
 
+
+
 val cur_tetra = ref (chg [""])
 
 val tetra = {
@@ -71,6 +73,58 @@ fun print_score () =
 fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
+(* fun rotate_arr array =
+    let val tempList = ref []
+	val r = ref 0
+	val c = ref 0
+	val rows = Array.length array
+	val cols = Array.length (Array.sub (array, 0))
+	val row = ref []
+	fun array_sub (arr', x, y) = Array.sub (Array.sub (arr', x), y)
+	fun convert_arr lstLst = 
+	    Array.fromList (map  (fn lst => Array.fromList lst) lstLst)
+    in
+	(r := 0;
+	 while (!r < rows) do (
+	     row := [];
+	     c := 0;
+	     while !c < cols do (
+		 row := array_sub(array, !c, !r)::(!row);
+		 c := !c + 1
+	     );
+	     tempList := ((!row)::(!tempList));
+	     r := !r + 1
+	 );
+	 convert_arr (!tempList))
+    end *)
+				
+
+fun rotate_cw_arr array =
+    let val M = Array.length array
+	val N = Array.length (Array.sub (array,0))
+	val ele = ref (Array.sub(Array.sub(array, 0),0))
+	val ret_row = ref (Array.array(0, !ele))
+	val ret = Array.array (M, Array.array (N, !ele))
+	val r = ref 0
+	val c = ref 0
+    in
+	r := 0;
+	while !r < M do (
+	    c := 0;
+	    while !c < N do (
+		ele := Array.sub(Array.sub(array, !r), !c);
+		ret_row := Array.sub(ret, !c);
+		Array.update(!ret_row, M-1-(!r), !ele);
+		Array.update(ret, !c, !ret_row);
+		c := !c + 1
+	    );
+	    r := !r + 1
+	);
+	ret
+    end
+
+
+
 fun main (prog_name: string, args: string list) =
     case TextIO.inputLine TextIO.stdIn of
 	NONE => main (prog_name, args)
@@ -99,6 +153,7 @@ fun main (prog_name: string, args: string list) =
 		      | SOME #"J" => bk (cur_tetra := #J tetra)
 		      | SOME #"L" => bk (cur_tetra := #L tetra)
 		      | SOME #"T" => bk (cur_tetra := #T tetra)
+		      | SOME #")" => bk (cur_tetra := rotate_cw_arr(!cur_tetra))
 		      | SOME #"t" => bk (print_arr (!cur_tetra))
 		      | SOME #"s" => bk (clear_line())
 		      | _ => process_cmd_lst(cmds)
@@ -107,4 +162,4 @@ fun main (prog_name: string, args: string list) =
 	end
 		  
 
-val _ = SMLofNJ.exportFn ("xx", main)
+(* val _ = SMLofNJ.exportFn ("xx", main) *)
