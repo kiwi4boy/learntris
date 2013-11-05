@@ -63,12 +63,14 @@ fun ask_given () =
     end
 
 fun empty_arr () =
+    Array.modify (fn _ => empty_row) arr
+(*
     let	fun aux n = if n >= Array.length(arr)
 		    then ()
 		    else (Array.update(arr, n, empty_row);
 			  aux (n+1))
     in aux 0
-    end
+    end  *)
 
 fun line_is_full (line) =
     Array.all (fn str => str <> ".") line
