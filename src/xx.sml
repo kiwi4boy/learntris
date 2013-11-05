@@ -4,38 +4,45 @@ val empty_row = Array.array(y_dim, ".")
 val arr = Array.array(x_dim, empty_row)
 val score = ref 0
 val lines = ref 0
-val mke = Array.fromList
-fun chg str =
-    Array.fromList(map Char.toString (explode(str)))
 
-val tetra = ref (mke([ chg "" ]))
-val tetra_i = mke([ chg "....",
-		    chg "cccc",
-		    chg "....",
-		    chg "...." ])
+fun chg lst = 
+    Array.fromList 
+	(map (fn str => Array.fromList(map Char.toString (explode(str))))
+	     lst)
 
-val tetra_o = mke([ chg "yy",
-		    chg "yy" ])
+val cur_tetra = ref (chg [""])
 
-val tetra_z = mke([ chg "rr.",
-		    chg ".rr",
-		    chg "..." ])
+val tetra = {
+    I = chg([ "....",
+	      "cccc",
+	      "....",
+	      "...." ]),
 
-val tetra_s = mke([ chg ".gg",
-		    chg "gg.",
-		    chg "..." ])
+    O = chg([ "yy",
+	      "yy" ]),
 
-val tetra_j = mke([ chg "b..",
-		    chg "bbb",
-		    chg "..." ])
+    Z = chg([ "rr.",
+	      ".rr",
+	      "..." ]),
 
-val tetra_l = mke([ chg "..o",
-		    chg "ooo",
-		    chg "..." ])
+    S = chg([ ".gg",
+	      "gg.",
+	      "..." ]),
 
-val tetra_t = mke([ chg ".m.",
-		    chg "mmm",
-		    chg "..." ])
+    J = chg([ "b..",
+	      "bbb",
+	      "..." ]),
+
+    L = chg([ "..o",
+	      "ooo",
+	      "..." ]),
+
+    T = chg([ ".m.",
+	      "mmm",
+	      "..." ])
+}
+
+
 
 val print_arr = 
     Array.app (fn array => (Array.app (fn str => print (str ^ " ")) array;
@@ -87,14 +94,14 @@ fun main (prog_name: string, args: string list) =
 					  (_::(#"s")::_) => bk (print_score())
 					| (_::(#"n")::_) => bk (print_lines()) 
 					| _ => process_cmd_lst(cmds))
-		      | SOME #"I" => bk (tetra := tetra_i)
-		      | SOME #"O" => bk (tetra := tetra_o)
-		      | SOME #"Z" => bk (tetra := tetra_z)
-		      | SOME #"S" => bk (tetra := tetra_s)
-		      | SOME #"J" => bk (tetra := tetra_j)
-		      | SOME #"L" => bk (tetra := tetra_l)
-		      | SOME #"T" => bk (tetra := tetra_t)
-		      | SOME #"t" => bk (print_arr (!tetra))
+		      | SOME #"I" => bk (cur_tetra := #I tetra)
+		      | SOME #"O" => bk (cur_tetra := #O tetra)
+		      | SOME #"Z" => bk (cur_tetra := #Z tetra)
+		      | SOME #"S" => bk (cur_tetra := #S tetra)
+		      | SOME #"J" => bk (cur_tetra := #J tetra)
+		      | SOME #"L" => bk (cur_tetra := #L tetra)
+		      | SOME #"T" => bk (cur_tetra := #T tetra)
+		      | SOME #"t" => bk (print_arr (!cur_tetra))
 		      | SOME #"s" => bk (clear_line())
 		      | _ => process_cmd_lst(cmds)
 		end
