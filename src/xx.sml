@@ -39,11 +39,6 @@ val tetra_t = mke([ chg ".m.",
 		    chg "mmm",
 		    chg "..." ])
 
-fun arr_sub array x y =
-    Array.sub(Array.sub(array, x), y)
-
-val sub = arr_sub arr
-
 val print_arr = 
     Array.app (fn array => (Array.app (fn str => print (str ^ " ")) array;
 			    print "\n"))
@@ -66,19 +61,6 @@ fun clear_line () =
 				  score := !score + 100;
 				  empty_row)
 			    else str) arr
-(*
-    let
-	fun aux n = if n >= Array.length(arr)
-		    then ()
-		    else (
-			if line_is_full(Array.sub(arr,n))
-			then (Array.update(arr,n,empty_row);
-			      lines := !lines + 1;
-			      score := !score + 100)
-			else ();
-			aux (n+1))
-    in aux 0
-    end *)
 
 fun print_score () =
     print (Int.toString(!score)^"\n")
@@ -94,7 +76,7 @@ fun main (prog_name: string, args: string list) =
 	    fun launch_cmd cmd cmds = 
 		let fun bk f = (f; process_cmd_lst cmds) in
 		    case Char.fromString cmd of
-			SOME #"q" => ((OS.Process.exit OS.Process.success);
+			SOME #"q" => (OS.Process.exit OS.Process.success;
 				      OS.Process.success)
 		      | SOME #"p" => bk (print_arr arr)
 		      | SOME #"g" => bk (ask_given())
@@ -118,7 +100,7 @@ fun main (prog_name: string, args: string list) =
 		case cmds of
 		    [] => main(prog_name,args)
 		  | (cmd::cmds') => (launch_cmd cmd cmds'; 
-				     process_cmd_lst(cmds'))
+				     process_cmd_lst cmds')
 	in process_cmd_lst(String.tokens Char.isSpace x)
 	end
 		  
