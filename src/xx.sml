@@ -4,9 +4,7 @@ val empty_row = Array.array(y_dim, ".")
 val arr = Array.array(x_dim, empty_row)
 val score = ref 0
 val lines = ref 0
-
 val mke = Array.fromList
-
 fun chg str =
     Array.fromList(map Char.toString (explode(str)))
 
@@ -52,8 +50,8 @@ fun ask_given () =
 fun empty_arr () =
     Array.modify (fn _ => empty_row) arr
 
-fun line_is_full (line) =
-    Array.all (fn str => str <> ".") line
+val line_is_full =
+    Array.all (fn str => str <> ".") 
 
 fun clear_line () =
     Array.modify (fn str => if line_is_full str
@@ -72,8 +70,12 @@ fun main (prog_name: string, args: string list) =
     case TextIO.inputLine TextIO.stdIn of
 	NONE => main (prog_name, args)
       | SOME x => 
-	let val commands = String.tokens Char.isSpace x
-	    fun launch_cmd cmd cmds = 
+	let fun process_cmd_lst cmds =
+		case cmds of
+		    [] => main(prog_name,args)
+		  | (cmd::cmds') => (launch_cmd cmd cmds'; 
+				     process_cmd_lst cmds')
+	    and launch_cmd cmd cmds = 
 		let fun bk f = (f; process_cmd_lst cmds) in
 		    case Char.fromString cmd of
 			SOME #"q" => (OS.Process.exit OS.Process.success;
@@ -96,11 +98,6 @@ fun main (prog_name: string, args: string list) =
 		      | SOME #"s" => bk (clear_line())
 		      | _ => process_cmd_lst(cmds)
 		end
-	    and process_cmd_lst cmds =
-		case cmds of
-		    [] => main(prog_name,args)
-		  | (cmd::cmds') => (launch_cmd cmd cmds'; 
-				     process_cmd_lst cmds')
 	in process_cmd_lst(String.tokens Char.isSpace x)
 	end
 		  
