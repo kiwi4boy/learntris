@@ -5,23 +5,54 @@ val arr = Array.array(x_dim, empty_row)
 val score = ref 0
 val lines = ref 0
 
-fun arr_sub arr x y =
-    Array.sub(Array.sub(arr, x), y)
+val mke = Array.fromList
+
+fun chg str =
+    Array.fromList(map Char.toString (explode(str)))
+
+val tetra = ref (mke([ chg "" ]))
+val tetra_i = mke([ chg "....",
+		    chg "cccc",
+		    chg "....",
+		    chg "...." ])
+
+val tetra_o = mke([ chg "yy",
+		    chg "yy" ])
+
+val tetra_z = mke([ chg "rr.",
+		    chg ".rr",
+		    chg "..." ])
+
+val tetra_s = mke([ chg ".gg",
+		    chg "gg.",
+		    chg "..." ])
+
+val tetra_j = mke([ chg "b..",
+		    chg "bbb",
+		    chg "..." ])
+
+val tetra_l = mke([ chg "..o",
+		    chg "ooo",
+		    chg "..." ])
+
+val tetra_t = mke([ chg ".m.",
+		    chg "mmm",
+		    chg "..." ])
+
+fun arr_sub array x y =
+    Array.sub(Array.sub(array, x), y)
 
 val sub = arr_sub arr
 
-(*fun print_char (character) =
-    print ((Char.toString character)^" ") *)
-
-fun print_arr (arr) =
+fun print_arr (array) =
     let
 	fun print_arr_col (row,col) =
-	    if col < Array.length(Array.sub(arr,0))
-	    then (print ((sub row col)^" ");
+	    if col < Array.length(Array.sub(array,0))
+	    then (print ((arr_sub array row col)^" ");
 		  print_arr_col(row, col+1))
 	    else ()
 	fun print_arr_row (row) =
-	    if row < Array.length(arr)
+	    if row < Array.length(array)
 	    then (print_arr_col(row,0);
 		  print "\n";
 		  print_arr_row(row+1))
@@ -78,23 +109,54 @@ fun print_lines () =
 fun main (prog_name: string, args: string list) =
     case TextIO.inputLine TextIO.stdIn of
 	NONE => main (prog_name, args)
-      | SOME x => case Char.fromString x of
-		      SOME #"q" => OS.Process.success
-		    | SOME #"p" => (print_arr arr;
-				    main(prog_name, args))
-		    | SOME #"g" => (ask_given();
-				    main(prog_name, args)) 
-		    | SOME #"c" => (empty_arr();
-				    main(prog_name, args))
-		    | SOME #"?" => (case explode x of
-				       (_::(#"s")::_) => (print_score();
-							  main(prog_name,args))
-				     | (_::(#"n")::_) => (print_lines();
-							  main(prog_name,args))
-				     | _ => main(prog_name,args))
-		    | SOME #"s" => (clear_line();
-				    main(prog_name, args))
-		    | _ => main (prog_name, args)
-			
+      | SOME x => 
+	let val commands = String.tokens Char.isSpace x
+	    fun launch_cmd cmd cmds = 
+		case Char.fromString cmd of
+		    SOME #"q" => ((OS.Process.exit OS.Process.success);
+				  OS.Process.success)
+		  | SOME #"p" => (print_arr arr; 
+				  process_cmd_lst cmds)
+		  | SOME #"g" => (ask_given(); 
+				  process_cmd_lst cmds)
+		  | SOME #"c" => (empty_arr(); 
+				  process_cmd_lst cmds)
+		  | SOME #"?" => (case explode cmd of
+				      (_::(#"s")::_) 
+				      => (print_score(); 
+					  process_cmd_lst(cmds))
+				    | (_::(#"n")::_) 
+				      => (print_lines(); 
+					  process_cmd_lst(cmds))
+				    | _ => process_cmd_lst(cmds))
+		  | SOME #"I" => (tetra := tetra_i;
+				  process_cmd_lst(cmds))
+		  | SOME #"O" => (tetra := tetra_o;
+				  process_cmd_lst(cmds))
+		  | SOME #"Z" => (tetra := tetra_z;
+				  process_cmd_lst(cmds))
+		  | SOME #"S" => (tetra := tetra_s;
+				  process_cmd_lst(cmds))
+		  | SOME #"J" => (tetra := tetra_j;
+				  process_cmd_lst(cmds))
+		  | SOME #"L" => (tetra := tetra_l;
+				  process_cmd_lst(cmds))
+		  | SOME #"T" => (tetra := tetra_t;
+				  process_cmd_lst(cmds))
+		  | SOME #"t" => (print_arr (!tetra);
+				  process_cmd_lst(cmds))
+		  | SOME #"s" => (clear_line(); 
+				  process_cmd_lst(cmds))
+		  | _ => process_cmd_lst(cmds)
+	    and process_cmd_lst cmds =
+		case cmds of
+		    [] => main(prog_name,args)
+		  | (cmd::cmds') => (launch_cmd cmd cmds'; 
+				     process_cmd_lst(cmds'))
+
+	in
+	    process_cmd_lst(String.tokens Char.isSpace x)
+	end
+		  
 
 val _ = SMLofNJ.exportFn ("xx", main) 
