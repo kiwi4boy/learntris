@@ -44,33 +44,19 @@ fun arr_sub array x y =
 
 val sub = arr_sub arr
 
-val print_arr = Array.app 
-		    (fn subarray =>
-			(Array.app (fn str => print (str ^ " ")) subarray;
-			 print "\n"))
+val print_arr = 
+    Array.app 
+	(fn array => (Array.app (fn str => print (str ^ " ")) array;
+		      print "\n"))
 
 fun ask_given_row () =
     String.tokens Char.isSpace (valOf (TextIO.inputLine TextIO.stdIn))
 
 fun ask_given () =
-    let
-	fun aux n = if n >= Array.length(arr)
-		    then ()
-		    else (Array.update(arr, n,
-				      Array.fromList (ask_given_row()));
-			  aux (n+1))
-    in aux 0
-    end
+    Array.modify (fn _ => Array.fromList (ask_given_row())) arr
 
 fun empty_arr () =
     Array.modify (fn _ => empty_row) arr
-(*
-    let	fun aux n = if n >= Array.length(arr)
-		    then ()
-		    else (Array.update(arr, n, empty_row);
-			  aux (n+1))
-    in aux 0
-    end  *)
 
 fun line_is_full (line) =
     Array.all (fn str => str <> ".") line
