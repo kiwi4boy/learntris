@@ -44,22 +44,10 @@ fun arr_sub array x y =
 
 val sub = arr_sub arr
 
-fun print_arr (array) =
-    let
-	fun print_arr_col (row,col) =
-	    if col < Array.length(Array.sub(array,0))
-	    then (print ((arr_sub array row col)^" ");
-		  print_arr_col(row, col+1))
-	    else ()
-	fun print_arr_row (row) =
-	    if row < Array.length(array)
-	    then (print_arr_col(row,0);
-		  print "\n";
-		  print_arr_row(row+1))
-	    else ()
-    in
-	print_arr_row (0)
-    end
+val print_arr = Array.app 
+		    (fn subarray =>
+			(Array.app (fn str => print (str ^ " ")) subarray;
+			 print "\n"))
 
 fun ask_given_row () =
     String.tokens Char.isSpace (valOf (TextIO.inputLine TextIO.stdIn))
@@ -122,16 +110,16 @@ fun main (prog_name: string, args: string list) =
 					  (_::(#"s")::_) => bk (print_score())
 					| (_::(#"n")::_) => bk (print_lines()) 
 					| _ => process_cmd_lst(cmds))
-		  | SOME #"I" => bk (tetra := tetra_i)
-		  | SOME #"O" => bk (tetra := tetra_o)
-		  | SOME #"Z" => bk (tetra := tetra_z)
-		  | SOME #"S" => bk (tetra := tetra_s)
-		  | SOME #"J" => bk (tetra := tetra_j)
-		  | SOME #"L" => bk (tetra := tetra_l)
-		  | SOME #"T" => bk (tetra := tetra_t)
-		  | SOME #"t" => bk (print_arr (!tetra))
-		  | SOME #"s" => bk (clear_line())
-		  | _ => process_cmd_lst(cmds)
+		      | SOME #"I" => bk (tetra := tetra_i)
+		      | SOME #"O" => bk (tetra := tetra_o)
+		      | SOME #"Z" => bk (tetra := tetra_z)
+		      | SOME #"S" => bk (tetra := tetra_s)
+		      | SOME #"J" => bk (tetra := tetra_j)
+		      | SOME #"L" => bk (tetra := tetra_l)
+		      | SOME #"T" => bk (tetra := tetra_t)
+		      | SOME #"t" => bk (print_arr (!tetra))
+		      | SOME #"s" => bk (clear_line())
+		      | _ => process_cmd_lst(cmds)
 		end
 	    and process_cmd_lst cmds =
 		case cmds of
@@ -142,4 +130,4 @@ fun main (prog_name: string, args: string list) =
 	end
 		  
 
-val _ = SMLofNJ.exportFn ("xx", main) 
+val _ = SMLofNJ.exportFn ("xx", main)
