@@ -45,9 +45,8 @@ fun arr_sub array x y =
 val sub = arr_sub arr
 
 val print_arr = 
-    Array.app 
-	(fn array => (Array.app (fn str => print (str ^ " ")) array;
-		      print "\n"))
+    Array.app (fn array => (Array.app (fn str => print (str ^ " ")) array;
+			    print "\n"))
 
 fun ask_given_row () =
     String.tokens Char.isSpace (valOf (TextIO.inputLine TextIO.stdIn))
@@ -62,6 +61,12 @@ fun line_is_full (line) =
     Array.all (fn str => str <> ".") line
 
 fun clear_line () =
+    Array.modify (fn str => if line_is_full str
+			    then (lines := !lines + 1;
+				  score := !score + 100;
+				  empty_row)
+			    else str) arr
+(*
     let
 	fun aux n = if n >= Array.length(arr)
 		    then ()
@@ -73,7 +78,7 @@ fun clear_line () =
 			else ();
 			aux (n+1))
     in aux 0
-    end
+    end *)
 
 fun print_score () =
     print (Int.toString(!score)^"\n")
