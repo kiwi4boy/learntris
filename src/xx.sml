@@ -42,18 +42,16 @@ val tetra = {
 	      "..." ])
 }
 
-
-
 val print_arr = 
     Array.app (fn array => (Array.app (fn str => print (str ^ " ")) array;
 			    print "\n"))
 
-fun ask_given_row () =
-    String.tokens Char.isSpace (valOf (TextIO.inputLine TextIO.stdIn))
-
 fun ask_given () =
-    Array.modify (fn _ => Array.fromList (ask_given_row())) arr
-
+    let fun ask_row () =
+	    String.tokens Char.isSpace (valOf (TextIO.inputLine TextIO.stdIn))
+    in Array.modify (fn _ => Array.fromList (ask_row())) arr
+    end
+	
 fun empty_arr () =
     Array.modify (fn _ => empty_row) arr
 
@@ -68,10 +66,10 @@ fun clear_line () =
 			    else str) arr
 
 fun print_score () =
-    print (Int.toString(!score)^"\n")
+    print (Int.toString(!score) ^ "\n")
 
 fun print_lines () =
-    print (Int.toString(!lines)^"\n")
+    print (Int.toString(!lines) ^ "\n")
 
 fun main (prog_name: string, args: string list) =
     case TextIO.inputLine TextIO.stdIn of
