@@ -1,6 +1,9 @@
 val x_dim = 22
 val y_dim = 10
-val arr = Array.array(x_dim, Array.array(y_dim, "."))
+val empty_row = Array.array(y_dim, ".")
+val arr = Array.array(x_dim, empty_row)
+val score = ref 0
+val lines = ref 0
 
 fun arr_sub arr x y =
     Array.sub(Array.sub(arr, x), y)
@@ -40,6 +43,38 @@ fun ask_given () =
     in aux 0
     end
 
+fun empty_arr () =
+    let
+	fun aux n = if n >= Array.length(arr)
+		    then ()
+		    else (Array.update(arr, n, empty_row);
+			  aux (n+1))
+    in aux 0
+    end
+
+fun line_is_full (line) =
+    Array.all (fn str => str <> ".") line
+
+fun clear_line () =
+    let
+	fun aux n = if n >= Array.length(arr)
+		    then ()
+		    else (
+			if line_is_full(Array.sub(arr,n))
+			then (Array.update(arr,n,empty_row);
+			      lines := !lines + 1;
+			      score := !score + 100)
+			else ();
+			aux (n+1))
+    in aux 0
+    end
+
+fun print_score () =
+    print (Int.toString(!score)^"\n")
+
+fun print_lines () =
+    print (Int.toString(!lines)^"\n")
+
 fun main (prog_name: string, args: string list) =
     case TextIO.inputLine TextIO.stdIn of
 	NONE => main (prog_name, args)
@@ -49,6 +84,16 @@ fun main (prog_name: string, args: string list) =
 				    main(prog_name, args))
 		    | SOME #"g" => (ask_given();
 				    main(prog_name, args)) 
+		    | SOME #"c" => (empty_arr();
+				    main(prog_name, args))
+		    | SOME #"?" => (case explode x of
+				       (_::(#"s")::_) => (print_score();
+							  main(prog_name,args))
+				     | (_::(#"n")::_) => (print_lines();
+							  main(prog_name,args))
+				     | _ => main(prog_name,args))
+		    | SOME #"s" => (clear_line();
+				    main(prog_name, args))
 		    | _ => main (prog_name, args)
 			
 
