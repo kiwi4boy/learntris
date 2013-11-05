@@ -75,8 +75,7 @@ fun ask_given () =
     end
 
 fun empty_arr () =
-    let
-	fun aux n = if n >= Array.length(arr)
+    let	fun aux n = if n >= Array.length(arr)
 		    then ()
 		    else (Array.update(arr, n, empty_row);
 			  aux (n+1))
@@ -112,50 +111,34 @@ fun main (prog_name: string, args: string list) =
       | SOME x => 
 	let val commands = String.tokens Char.isSpace x
 	    fun launch_cmd cmd cmds = 
-		case Char.fromString cmd of
-		    SOME #"q" => ((OS.Process.exit OS.Process.success);
-				  OS.Process.success)
-		  | SOME #"p" => (print_arr arr; 
-				  process_cmd_lst cmds)
-		  | SOME #"g" => (ask_given(); 
-				  process_cmd_lst cmds)
-		  | SOME #"c" => (empty_arr(); 
-				  process_cmd_lst cmds)
-		  | SOME #"?" => (case explode cmd of
-				      (_::(#"s")::_) 
-				      => (print_score(); 
-					  process_cmd_lst(cmds))
-				    | (_::(#"n")::_) 
-				      => (print_lines(); 
-					  process_cmd_lst(cmds))
-				    | _ => process_cmd_lst(cmds))
-		  | SOME #"I" => (tetra := tetra_i;
-				  process_cmd_lst(cmds))
-		  | SOME #"O" => (tetra := tetra_o;
-				  process_cmd_lst(cmds))
-		  | SOME #"Z" => (tetra := tetra_z;
-				  process_cmd_lst(cmds))
-		  | SOME #"S" => (tetra := tetra_s;
-				  process_cmd_lst(cmds))
-		  | SOME #"J" => (tetra := tetra_j;
-				  process_cmd_lst(cmds))
-		  | SOME #"L" => (tetra := tetra_l;
-				  process_cmd_lst(cmds))
-		  | SOME #"T" => (tetra := tetra_t;
-				  process_cmd_lst(cmds))
-		  | SOME #"t" => (print_arr (!tetra);
-				  process_cmd_lst(cmds))
-		  | SOME #"s" => (clear_line(); 
-				  process_cmd_lst(cmds))
+		let fun bk f = (f; process_cmd_lst cmds) in
+		    case Char.fromString cmd of
+			SOME #"q" => ((OS.Process.exit OS.Process.success);
+				      OS.Process.success)
+		      | SOME #"p" => bk (print_arr arr)
+		      | SOME #"g" => bk (ask_given())
+		      | SOME #"c" => bk (empty_arr())
+		      | SOME #"?" => (case explode cmd of
+					  (_::(#"s")::_) => bk (print_score())
+					| (_::(#"n")::_) => bk (print_lines()) 
+					| _ => process_cmd_lst(cmds))
+		  | SOME #"I" => bk (tetra := tetra_i)
+		  | SOME #"O" => bk (tetra := tetra_o)
+		  | SOME #"Z" => bk (tetra := tetra_z)
+		  | SOME #"S" => bk (tetra := tetra_s)
+		  | SOME #"J" => bk (tetra := tetra_j)
+		  | SOME #"L" => bk (tetra := tetra_l)
+		  | SOME #"T" => bk (tetra := tetra_t)
+		  | SOME #"t" => bk (print_arr (!tetra))
+		  | SOME #"s" => bk (clear_line())
 		  | _ => process_cmd_lst(cmds)
+		end
 	    and process_cmd_lst cmds =
 		case cmds of
 		    [] => main(prog_name,args)
 		  | (cmd::cmds') => (launch_cmd cmd cmds'; 
 				     process_cmd_lst(cmds'))
-
-	in
-	    process_cmd_lst(String.tokens Char.isSpace x)
+	in process_cmd_lst(String.tokens Char.isSpace x)
 	end
 		  
 
