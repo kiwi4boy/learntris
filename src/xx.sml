@@ -73,32 +73,6 @@ fun print_score () =
 fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
-(* fun rotate_arr array =
-    let val tempList = ref []
-	val r = ref 0
-	val c = ref 0
-	val rows = Array.length array
-	val cols = Array.length (Array.sub (array, 0))
-	val row = ref []
-	fun array_sub (arr', x, y) = Array.sub (Array.sub (arr', x), y)
-	fun convert_arr lstLst = 
-	    Array.fromList (map  (fn lst => Array.fromList lst) lstLst)
-    in
-	(r := 0;
-	 while (!r < rows) do (
-	     row := [];
-	     c := 0;
-	     while !c < cols do (
-		 row := array_sub(array, !c, !r)::(!row);
-		 c := !c + 1
-	     );
-	     tempList := ((!row)::(!tempList));
-	     r := !r + 1
-	 );
-	 convert_arr (!tempList))
-    end *)
-				
-
 fun rotate_cw_arr array =
     let val M = Array.length array
 	val N = Array.length (Array.sub (array,0))
