@@ -72,30 +72,30 @@ fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
 fun rotate_cw_arr mat =
-    let val M = Vector.length mat
+    let fun subarr vec r c =
+	    Vector.sub(Vector.sub(vec, r), c)
+	fun updarr vec r c element =
+	    let val vec_row = Vector.sub(vec, r)
+		val vec_row_upd = Vector.update(vec_row, c, element)
+	    in Vector.update(vec, r, vec_row_upd)
+	    end
+
+	val M = Vector.length mat
 	val N = Vector.length (Vector.sub (mat, 0))
-	val ele = ref (Vector.sub(Vector.sub(mat, 0),0))
-	val ret = ref (Vector.tabulate 
-		      (M, (fn _ => Vector.tabulate (N, (fn _ => !ele)))))
-	val ret_row = ref (Vector.sub (!ret, 0));
-	val r = ref 0
-	val c = ref 0
+	val ele = subarr mat 0 0 
+	val ret = Vector.tabulate 
+		      (M, (fn _ => Vector.tabulate (N, (fn _ => ele))))
     in
-	r := 0;
-	while !r < M do (
-	    c := 0;
-	    while !c < N do (
-		ele := Vector.sub(Vector.sub(mat, !r), !c);
-		ret_row := Vector.sub(!ret, !c);
-		ret_row := Vector.update(!ret_row, M-1-(!r), !ele);
-		ret := Vector.update(!ret, !c, !ret_row);
-		c := !c + 1
-	    );
-	    r := !r + 1
-	);
-	!ret
+	Vector.foldli 
+	    (fn (r, row, retAcc) =>   
+		Vector.foldli 
+		    (fn (c, element, retAcc') =>
+			updarr retAcc' c (M-1-r) element)
+		    retAcc
+		    row)
+	    ret
+	    mat
     end  
- 
 
 fun main (prog_name: string, args: string list) =
     case TextIO.inputLine TextIO.stdIn of
