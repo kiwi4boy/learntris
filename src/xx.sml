@@ -1,16 +1,14 @@
 val x_dim = 22
 val y_dim = 10
-val empty_row = Array.array(y_dim, ".")
-val arr = Array.array(x_dim, empty_row)
+val empty_row = Vector.tabulate (y_dim, (fn _ => "."))
+val arr = ref (Vector.tabulate (x_dim, (fn _ => empty_row)))
 val score = ref 0
 val lines = ref 0
 
 fun chg lst = 
-    Array.fromList 
-	(map (fn str => Array.fromList(map Char.toString (explode(str))))
+    Vector.fromList 
+	(map (fn str => Vector.fromList(map Char.toString (explode(str))))
 	     lst)
-
-
 
 val cur_tetra = ref (chg [""])
 
@@ -45,27 +43,27 @@ val tetra = {
 }
 
 val print_arr = 
-    Array.app (fn array => (Array.app (fn str => print (str ^ " ")) array;
+    Vector.app (fn array => (Vector.app (fn str => print (str ^ " ")) array;
 			    print "\n"))
 
 fun ask_given () =
     let fun ask_row () =
 	    String.tokens Char.isSpace (valOf (TextIO.inputLine TextIO.stdIn))
-    in Array.modify (fn _ => Array.fromList (ask_row())) arr
+    in arr := (Vector.map (fn _ => Vector.fromList (ask_row())) (!arr))
     end
 	
 fun empty_arr () =
-    Array.modify (fn _ => empty_row) arr
+    arr := (Vector.map (fn _ => empty_row) (!arr))
 
 val line_is_full =
-    Array.all (fn str => str <> ".") 
+    Vector.all (fn str => str <> ".") 
 
 fun clear_line () =
-    Array.modify (fn str => if line_is_full str
+    arr := (Vector.map (fn str => if line_is_full str
 			    then (lines := !lines + 1;
 				  score := !score + 100;
 				  empty_row)
-			    else str) arr
+			    else str) (!arr))
 
 fun print_score () =
     print (Int.toString(!score) ^ "\n")
@@ -73,12 +71,13 @@ fun print_score () =
 fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
-fun rotate_cw_arr array =
-    let val M = Array.length array
-	val N = Array.length (Array.sub (array,0))
-	val ele = ref (Array.sub(Array.sub(array, 0),0))
-	val ret_row = ref (Array.array(0, !ele))
-	val ret = Array.array (M, Array.array (N, !ele))
+fun rotate_cw_arr mat =
+    let val M = Vector.length mat
+	val N = Vector.length (Vector.sub (mat, 0))
+	val ele = ref (Vector.sub(Vector.sub(mat, 0),0))
+	val ret = ref (Vector.tabulate 
+		      (M, (fn _ => Vector.tabulate (N, (fn _ => !ele)))))
+	val ret_row = ref (Vector.sub (!ret, 0));
 	val r = ref 0
 	val c = ref 0
     in
@@ -86,18 +85,17 @@ fun rotate_cw_arr array =
 	while !r < M do (
 	    c := 0;
 	    while !c < N do (
-		ele := Array.sub(Array.sub(array, !r), !c);
-		ret_row := Array.sub(ret, !c);
-		Array.update(!ret_row, M-1-(!r), !ele);
-		Array.update(ret, !c, !ret_row);
+		ele := Vector.sub(Vector.sub(mat, !r), !c);
+		ret_row := Vector.sub(!ret, !c);
+		ret_row := Vector.update(!ret_row, M-1-(!r), !ele);
+		ret := Vector.update(!ret, !c, !ret_row);
 		c := !c + 1
 	    );
 	    r := !r + 1
 	);
-	ret
-    end
-
-
+	!ret
+    end  
+ 
 
 fun main (prog_name: string, args: string list) =
     case TextIO.inputLine TextIO.stdIn of
@@ -113,7 +111,7 @@ fun main (prog_name: string, args: string list) =
 		    case Char.fromString cmd of
 			SOME #"q" => (OS.Process.exit OS.Process.success;
 				      OS.Process.success)
-		      | SOME #"p" => bk (print_arr arr)
+		      | SOME #"p" => bk (print_arr (!arr))
 		      | SOME #"g" => bk (ask_given())
 		      | SOME #"c" => bk (empty_arr())
 		      | SOME #"?" => (case explode cmd of
@@ -127,7 +125,8 @@ fun main (prog_name: string, args: string list) =
 		      | SOME #"J" => bk (cur_tetra := #J tetra)
 		      | SOME #"L" => bk (cur_tetra := #L tetra)
 		      | SOME #"T" => bk (cur_tetra := #T tetra)
-		      | SOME #")" => bk (cur_tetra := rotate_cw_arr(!cur_tetra))
+		      | SOME #")" => bk (cur_tetra := rotate_cw_arr(!cur_tetra)) 
+		      | SOME #";" => bk (print "\n")
 		      | SOME #"t" => bk (print_arr (!cur_tetra))
 		      | SOME #"s" => bk (clear_line())
 		      | _ => process_cmd_lst(cmds)
@@ -136,4 +135,4 @@ fun main (prog_name: string, args: string list) =
 	end
 		  
 
-(* val _ = SMLofNJ.exportFn ("xx", main) *)
+val _ = SMLofNJ.exportFn ("xx", main)
