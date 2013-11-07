@@ -71,30 +71,31 @@ fun print_score () =
 fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
-fun rotate_cw_arr mat =
-    let fun subarr vec r c =
+fun rotate_arr matrix clockwise =
+    let fun sub vec r c =
 	    Vector.sub(Vector.sub(vec, r), c)
-	fun updarr vec r c element =
-	    let val vec_row = Vector.sub(vec, r)
-		val vec_row_upd = Vector.update(vec_row, c, element)
-	    in Vector.update(vec, r, vec_row_upd)
+	fun update vec r c element =
+	    let val vec_row_original = Vector.sub(vec, r)
+		val vec_row_updated = Vector.update(vec_row_original, c, element)
+	    in Vector.update(vec, r, vec_row_updated)
 	    end
 
-	val M = Vector.length mat
-	val N = Vector.length (Vector.sub (mat, 0))
-	val ele = subarr mat 0 0 
-	val ret = Vector.tabulate 
-		      (M, (fn _ => Vector.tabulate (N, (fn _ => ele))))
-    in
-	Vector.foldli 
-	    (fn (r, row, retAcc) =>   
-		Vector.foldli 
-		    (fn (c, element, retAcc') =>
-			updarr retAcc' c (M-1-r) element)
-		    retAcc
-		    row)
-	    ret
-	    mat
+	val M = Vector.length matrix
+	val N = Vector.length (Vector.sub (matrix, 0))
+	val firstElement = sub matrix 0 0 
+	val returnInitial = Vector.tabulate 
+		      (M, (fn _ => Vector.tabulate (N, (fn _ => firstElement))))
+    in Vector.foldli 
+	   (fn (r, matrixRow, returnAcc) =>   
+	       Vector.foldli 
+		   (fn (c, element, returnAcc') =>
+		       if clockwise 
+		       then update returnAcc' c (M-1-r) element
+		       else update returnAcc' c r element)
+		   returnAcc
+		   matrixRow)
+	   returnInitial
+	   matrix 
     end  
 
 fun main (prog_name: string, args: string list) =
@@ -125,7 +126,10 @@ fun main (prog_name: string, args: string list) =
 		      | SOME #"J" => bk (cur_tetra := #J tetra)
 		      | SOME #"L" => bk (cur_tetra := #L tetra)
 		      | SOME #"T" => bk (cur_tetra := #T tetra)
-		      | SOME #")" => bk (cur_tetra := rotate_cw_arr(!cur_tetra)) 
+		      | SOME #"(" => bk (cur_tetra := rotate_arr
+							  (!cur_tetra) false)
+		      | SOME #")" => bk (cur_tetra := rotate_arr 
+							  (!cur_tetra) true) 
 		      | SOME #";" => bk (print "\n")
 		      | SOME #"t" => bk (print_arr (!cur_tetra))
 		      | SOME #"s" => bk (clear_line())
