@@ -12,35 +12,35 @@ fun chg lst =
 
 val cur_tetra = ref (chg [""])
 
-val tetra = {
-    I = chg([ "....",
-	      "cccc",
-	      "....",
-	      "...." ]),
+val tetra = [
+    (#"I" , chg([ "....",
+		 "cccc",
+		 "....",
+		 "...." ]) ),
 
-    O = chg([ "yy",
-	      "yy" ]),
+    (#"O" , chg([ "yy",
+		 "yy" ]) ),
 
-    Z = chg([ "rr.",
-	      ".rr",
-	      "..." ]),
+    (#"Z" , chg([ "rr.",
+		 ".rr",
+		 "..." ]) ),
 
-    S = chg([ ".gg",
-	      "gg.",
-	      "..." ]),
+    (#"S" , chg([ ".gg",
+		 "gg.",
+		 "..." ]) ),
 
-    J = chg([ "b..",
-	      "bbb",
-	      "..." ]),
+    (#"J" , chg([ "b..",
+		 "bbb",
+		 "..." ]) ),
 
-    L = chg([ "..o",
-	      "ooo",
-	      "..." ]),
+    (#"L" , chg([ "..o",
+		 "ooo",
+		 "..." ]) ),
 
-    T = chg([ ".m.",
-	      "mmm",
-	      "..." ])
-}
+    (#"T" , chg([ ".m.",
+		 "mmm",
+		 "..." ]) )
+]
 
 val print_arr = 
     Vector.app (fn array => (Vector.app (fn str => print (str ^ " ")) array;
@@ -91,7 +91,7 @@ fun rotate_arr matrix clockwise =
 		   (fn (c, element, returnAcc') =>
 		       if clockwise 
 		       then update returnAcc' c (M-1-r) element
-		       else update returnAcc' c r element)
+		       else update returnAcc' (N-1-c) r element)
 		   returnAcc
 		   matrixRow)
 	   returnInitial
@@ -133,8 +133,12 @@ fun main (prog_name: string, args: string list) =
 		      | SOME #";" => bk (print "\n")
 		      | SOME #"t" => bk (print_arr (!cur_tetra))
 		      | SOME #"s" => bk (clear_line())
-		      | _ => process_cmd_lst(cmds)
+		      | _ => check_tetra_gen cmd cmds
 		end
+	    and check_tetra_gen cmd cmds =
+		let fun bk f = (f; process_cmd_lst cmds) 
+		    fun in
+		    case (Char.fromString cmd of
 	in process_cmd_lst(String.tokens Char.isSpace x)
 	end
 		  
