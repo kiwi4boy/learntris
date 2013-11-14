@@ -14,32 +14,32 @@ val cur_tetra = ref (chg [""])
 
 val tetra = [
     (#"I" , chg([ "....",
-		 "cccc",
-		 "....",
-		 "...." ]) ),
+		  "cccc",
+		  "....",
+		  "...." ]) ),
 
     (#"O" , chg([ "yy",
-		 "yy" ]) ),
+		  "yy" ]) ),
 
     (#"Z" , chg([ "rr.",
-		 ".rr",
-		 "..." ]) ),
+		  ".rr",
+		  "..." ]) ),
 
     (#"S" , chg([ ".gg",
-		 "gg.",
-		 "..." ]) ),
+		  "gg.",
+		  "..." ]) ),
 
     (#"J" , chg([ "b..",
-		 "bbb",
-		 "..." ]) ),
+		  "bbb",
+		  "..." ]) ),
 
     (#"L" , chg([ "..o",
-		 "ooo",
-		 "..." ]) ),
+		  "ooo",
+		  "..." ]) ),
 
     (#"T" , chg([ ".m.",
-		 "mmm",
-		 "..." ]) )
+		  "mmm",
+		  "..." ]) )
 ]
 
 val print_arr = 
@@ -71,7 +71,7 @@ fun print_score () =
 fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
-fun rotate_arr matrix clockwise =
+fun rotate_arr matrix =
     let fun sub vec r c =
 	    Vector.sub(Vector.sub(vec, r), c)
 	fun update vec r c element =
@@ -79,7 +79,6 @@ fun rotate_arr matrix clockwise =
 		val vec_row_updated = Vector.update(vec_row_original, c, element)
 	    in Vector.update(vec, r, vec_row_updated)
 	    end
-
 	val M = Vector.length matrix
 	val N = Vector.length (Vector.sub (matrix, 0))
 	val firstElement = sub matrix 0 0 
@@ -89,9 +88,7 @@ fun rotate_arr matrix clockwise =
 	   (fn (r, matrixRow, returnAcc) =>   
 	       Vector.foldli 
 		   (fn (c, element, returnAcc') =>
-		       if clockwise 
-		       then update returnAcc' c (M-1-r) element
-		       else update returnAcc' (N-1-c) r element)
+		       update returnAcc' c (M-1-r) element)
 		   returnAcc
 		   matrixRow)
 	   returnInitial
@@ -119,17 +116,17 @@ fun main (prog_name: string, args: string list) =
 					  (_::(#"s")::_) => bk (print_score())
 					| (_::(#"n")::_) => bk (print_lines()) 
 					| _ => process_cmd_lst(cmds))
-		      | SOME #"I" => bk (cur_tetra := #I tetra)
+	(*	      | SOME #"I" => bk (cur_tetra := #I tetra)
 		      | SOME #"O" => bk (cur_tetra := #O tetra)
 		      | SOME #"Z" => bk (cur_tetra := #Z tetra)
 		      | SOME #"S" => bk (cur_tetra := #S tetra)
 		      | SOME #"J" => bk (cur_tetra := #J tetra)
 		      | SOME #"L" => bk (cur_tetra := #L tetra)
-		      | SOME #"T" => bk (cur_tetra := #T tetra)
-		      | SOME #"(" => bk (cur_tetra := rotate_arr
-							  (!cur_tetra) false)
-		      | SOME #")" => bk (cur_tetra := rotate_arr 
-							  (!cur_tetra) true) 
+		      | SOME #"T" => bk (cur_tetra := #T tetra) *)
+		      | SOME #"(" => bk (cur_tetra := rotate_arr (rotate_arr   
+					 (rotate_arr (!cur_tetra)))) 
+		      | SOME #")" => bk (cur_tetra := rotate_arr (!cur_tetra))
+
 		      | SOME #";" => bk (print "\n")
 		      | SOME #"t" => bk (print_arr (!cur_tetra))
 		      | SOME #"s" => bk (clear_line())
@@ -137,8 +134,19 @@ fun main (prog_name: string, args: string list) =
 		end
 	    and check_tetra_gen cmd cmds =
 		let fun bk f = (f; process_cmd_lst cmds) 
-		    fun in
-		    case (Char.fromString cmd of
+		    fun assoc x xs =
+			case (x, xs) of
+			    (NONE, _) => NONE
+			  | (_, []) => NONE
+			  | (SOME y, (z,w)::xs') => if y = z
+						    then SOME w
+						    else assoc x xs'
+
+		in
+		    case assoc (Char.fromString cmd) tetra of
+			SOME y => bk (cur_tetra := y)
+		      | NONE => process_cmd_lst cmds
+		end
 	in process_cmd_lst(String.tokens Char.isSpace x)
 	end
 		  
