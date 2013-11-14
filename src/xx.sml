@@ -95,52 +95,55 @@ fun rotate_arr matrix =
 	   matrix 
     end  
 
-fun main (prog_name: string, args: string list) =
-    case TextIO.inputLine TextIO.stdIn of
-	NONE => main (prog_name, args)
-      | SOME x => 
-	let fun process_cmd_lst cmds =
-		case cmds of
-		    [] => main(prog_name,args)
-		  | (cmd::cmds') => (launch_cmd cmd cmds'; 
-				     process_cmd_lst cmds')
-	    and launch_cmd cmd cmds = 
-		let fun bk f = (f; process_cmd_lst cmds) in
-		    case Char.fromString cmd of
-			SOME #"q" => (OS.Process.exit OS.Process.success;
-				      OS.Process.success)
-		      | SOME #"p" => bk (print_arr (!arr))
-		      | SOME #"g" => bk (ask_given())
-		      | SOME #"c" => bk (empty_arr())
-		      | SOME #"?" => (case explode cmd of
-					  (_::(#"s")::_) => bk (print_score())
-					| (_::(#"n")::_) => bk (print_lines()) 
-					| _ => process_cmd_lst(cmds))
-		      | SOME #"(" => bk (cur_tetra := rotate_arr (rotate_arr   
-					 (rotate_arr (!cur_tetra)))) 
-		      | SOME #")" => bk (cur_tetra := rotate_arr (!cur_tetra))
+fun process_cmd_lst cmds =
+    case cmds of
+	[] => ask_for_input ()
+      | (cmd::cmds') => (launch_cmd cmd cmds'; 
+			 process_cmd_lst cmds')
 
-		      | SOME #";" => bk (print "\n")
-		      | SOME #"t" => bk (print_arr (!cur_tetra))
-		      | SOME #"s" => bk (clear_line())
-		      | _ => check_tetra_gen cmd cmds
-		end
-	    and check_tetra_gen cmd cmds =
-		let fun bk f = (f; process_cmd_lst cmds) 
-		    fun assoc x xs =
-			case (x, xs) of
-			    (NONE, _) => NONE
-			  | (_, []) => NONE
-			  | (SOME y, (z,w)::xs') => if y = z
-						    then SOME w
-						    else assoc x xs'
-		in
-		    case assoc (Char.fromString cmd) tetra of
-			SOME y => bk (cur_tetra := y)
-		      | NONE => process_cmd_lst cmds
-		end
-	in process_cmd_lst(String.tokens Char.isSpace x)
-	end
-		  
+and launch_cmd cmd cmds = 
+    let fun bk f = (f; process_cmd_lst cmds) in
+	case Char.fromString cmd of
+	    SOME #"q" => (OS.Process.exit OS.Process.success;
+			  OS.Process.success)
+	  | SOME #"p" => bk (print_arr (!arr))
+	  | SOME #"g" => bk (ask_given())
+	  | SOME #"c" => bk (empty_arr())
+	  | SOME #"?" => (case explode cmd of
+			      (_::(#"s")::_) => bk (print_score())
+			    | (_::(#"n")::_) => bk (print_lines()) 
+			    | _ => process_cmd_lst(cmds))
+	  | SOME #"(" => bk (cur_tetra := rotate_arr 
+					      (rotate_arr   
+						   (rotate_arr (!cur_tetra)))) 
+	  | SOME #")" => bk (cur_tetra := rotate_arr (!cur_tetra))
+	  | SOME #";" => bk (print "\n")
+	  | SOME #"t" => bk (print_arr (!cur_tetra))
+	  | SOME #"s" => bk (clear_line())
+	  | _ => check_tetra_gen cmd cmds
+    end
+
+and check_tetra_gen cmd cmds =
+    let fun bk f = (f; process_cmd_lst cmds) 
+	fun assoc x xs =
+	    case (x, xs) of
+		(NONE, _) => NONE
+	      | (_, []) => NONE
+	      | (SOME y, (z,w)::xs') => if y = z
+					then SOME w
+					else assoc x xs'
+    in
+	case assoc (Char.fromString cmd) tetra of
+	    SOME y => bk (cur_tetra := y)
+	  | NONE => process_cmd_lst cmds
+    end 
+
+and ask_for_input () =
+    case TextIO.inputLine TextIO.stdIn of
+	NONE => ask_for_input ()
+      | SOME x => process_cmd_lst(String.tokens Char.isSpace x)
+				 
+fun main (prog_name: string, args: string list) =
+    ask_for_input ()
 
 val _ = SMLofNJ.exportFn ("xx", main)
