@@ -1,7 +1,7 @@
 val x_dim = 22
 val y_dim = 10
 val empty_row = Vector.tabulate (y_dim, (fn _ => "."))
-val empty_arr = Vector.tabulate (x_dim (fn _ => empty_row))
+val empty_arr = Vector.tabulate (x_dim, (fn _ => empty_row))
 val arr = ref (empty_arr)
 val score = ref 0
 val lines = ref 0
@@ -83,42 +83,39 @@ fun print_score () =
 fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
+fun double_foldli f initial target = 
+    Vector.foldli
+	(fn (r, row, returnAcc) =>
+	    Vector.foldli
+		(fn (c, element, returnAcc') =>
+		    f (r,c,element,returnAcc'))
+		returnAcc
+		row)
+	initial
+	target
+
 fun rotate_arr matrix =
     let val M = Vector.length matrix
 	val N = Vector.length (Vector.sub (matrix, 0))
 	val firstElement = sub matrix 0 0 
 	val returnInitial = Vector.tabulate 
 		      (M, (fn _ => Vector.tabulate (N, (fn _ => firstElement))))
-    in Vector.foldli 
-	   (fn (r, matrixRow, returnAcc) =>   
-	       Vector.foldli 
-		   (fn (c, element, returnAcc') =>
-		       update returnAcc' c (M-1-r) element)
-		   returnAcc
-		   matrixRow)
-	   returnInitial
-	   matrix 
-    end  
+	fun update_acc (r,c,e,acc) = update acc c (M-1-r) e
+    in double_foldli update_acc returnInitial matrix
+    end
 
 (* datatype direction = Down | Left | Right
 
 fun move direction =
     Ve   *)
     
-
 fun place_block_in_arr block (x,y) =
-    Vector.foldli
-	(fn (r, blockRow, returnAcc) =>
-	    Vector.foldli
-		(fn (c, element, returnAcc') =>
-		    if element <> "."
-		    then update returnAcc' (r+x) (c+y) 
-				(String.map Char.toUpper element)
-		    else returnAcc')
-		returnAcc
-		blockRow)
-	(!arr)
-	block
+    let fun update_acc (r,c,e,acc) =
+	    if e <> "."
+	    then update acc (r+x) (c+y) (String.map Char.toUpper e)
+	    else acc
+    in double_foldli update_acc (!arr) block
+    end
 
 fun launch_cmd cmds = 
     let fun bk f cmds = (f; launch_cmd cmds) in
@@ -164,4 +161,4 @@ and ask_for_input () =
 fun main (prog_name: string, args: string list) =
     ask_for_input ()
 
-val _ = SMLofNJ.exportFn ("xx", main)
+(* val _ = SMLofNJ.exportFn ("xx", main) *)
