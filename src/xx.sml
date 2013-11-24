@@ -85,7 +85,7 @@ fun print_score () =
 fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
-fun double_foldli f initial = 
+fun double_foldli f = 
     Vector.foldli
 	(fn (r, row, returnAcc) =>
 	    Vector.foldli
@@ -93,7 +93,7 @@ fun double_foldli f initial =
 		    f (r,c,element,returnAcc'))
 		returnAcc
 		row)
-	initial
+	
 	
 
 fun rotate_arr matrix =

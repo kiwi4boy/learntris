@@ -1349,4 +1349,69 @@ val check_tetra_gen = fn : char list -> Word32.word
 val ask_for_input = fn : unit -> Word32.word
 val main = fn : string * string list -> Word32.word
 val it = () : unit
-- 
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:178.11 Warning: calling polyEqual
+val x_dim = 22 : int
+val y_dim = 10 : int
+val empty_row = #[".",".",".",".",".",".",".",".",".","."] : string vector
+val empty_arr = <hidden-value> : string vector vector
+val arr =
+  ref
+    #[#[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],...]
+  : string vector vector ref
+val score = ref 0 : int ref
+val lines = ref 0 : int ref
+val chg = fn : string list -> string vector vector
+val cur_tetra = ref #[#[]] : string vector vector ref
+val cur_tetra_loc = ref (0,0) : (int * int) ref
+val tetra =
+  [(#"I",
+    #[#[".",".",".","."],#["c","c","c","c"],#[".",".",".","."],
+     #[".",".",".","."]],(0,3)),(#"O",#[#["y","y"],#["y","y"]],(0,4)),
+   (#"Z",#[#["r","r","."],#[".","r","r"],#[".",".","."]],(0,3)),
+   (#"S",#[#[".","g","g"],#["g","g","."],#[".",".","."]],(0,3)),
+   (#"J",#[#["b",".","."],#["b","b","b"],#[".",".","."]],(0,3)),
+   (#"L",#[#[".",".","o"],#["o","o","o"],#[".",".","."]],(0,3)),
+   (#"T",#[#[".","m","."],#["m","m","m"],#[".",".","."]],(0,3))]
+  : (char * string vector vector * (int * int)) list
+val sub = fn : 'a vector vector -> int -> int -> 'a
+val update = fn : 'a vector vector -> int -> int -> 'a -> 'a vector vector
+val print_arr = fn : string vector vector -> unit
+val ask_given = fn : unit -> unit
+val empty_arr = fn : unit -> unit
+val line_is_full = fn : string vector -> bool
+val clear_line = fn : unit -> unit
+val print_score = fn : unit -> unit
+val print_lines = fn : unit -> unit
+val double_foldli = fn
+  : (int * int * 'a * 'b -> 'b) -> 'b -> 'a vector vector -> 'b
+val rotate_arr = fn : 'a vector vector -> 'a vector vector
+val place_block_in_arr = fn
+  : string vector vector -> int * int -> string vector vector
+datatype direction = Down | Left | Right
+val move = fn : direction -> unit
+val print_mixed = fn : unit -> unit
+val launch_cmd = fn : char list -> Word32.word
+val check_tetra_gen = fn : char list -> Word32.word
+val ask_for_input = fn : unit -> Word32.word
+val main = fn : string * string list -> Word32.word
+val it = () : unit
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[autoloading done]
+xx.sml:178.11 Warning: calling polyEqual
+
+Process sml finished
