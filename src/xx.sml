@@ -145,8 +145,8 @@ fun move direction =
 	fun is_valid_move () = 
 	    newLoc_is_valid () andalso newLoc_do_not_collide ()
     in if is_valid_move ()
-       then new_loc
-       else (!cur_tetra_loc)
+       then (cur_tetra_loc := new_loc)
+       else (cur_tetra_loc := (!cur_tetra_loc))
     end
 
 fun print_mixed () =
@@ -169,6 +169,9 @@ fun launch_cmd cmds =
 				 (rotate_arr   
 				      (rotate_arr (!cur_tetra)))) r
 	  | (#")"::r) => bk (cur_tetra := rotate_arr (!cur_tetra)) r
+	  | (#"<"::r) => bk (move Left) r
+	  | (#">"::r) => bk (move Right) r
+	  | (#"v"::r) => bk (move Down) r
 	  | (#";"::r) => bk (print "\n") r
 	  | (#"t"::r) => bk (print_arr (!cur_tetra)) r
 	  | (#"s"::r) => bk (clear_line()) r
