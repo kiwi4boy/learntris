@@ -1,7 +1,8 @@
 val x_dim = 22
 val y_dim = 10
 val empty_row = Vector.tabulate (y_dim, (fn _ => "."))
-val arr = ref (Vector.tabulate (x_dim, (fn _ => empty_row)))
+val empty_arr = Vector.tabulate (x_dim (fn _ => empty_row))
+val arr = ref (empty_arr)
 val score = ref 0
 val lines = ref 0
 
@@ -11,36 +12,47 @@ fun chg lst =
 	     lst)
 
 val cur_tetra = ref (chg [""])
+val cur_tetra_loc = ref (0,0)
 
 val tetra = [
     (#"I" , chg([ "....",
 		  "cccc",
 		  "....",
-		  "...." ]) ),
+		  "...." ]), (0,3) ),
 
     (#"O" , chg([ "yy",
-		  "yy" ]) ),
+		  "yy" ]), (0,4) ),
 
     (#"Z" , chg([ "rr.",
 		  ".rr",
-		  "..." ]) ),
+		  "..." ]), (0,3) ),
 
     (#"S" , chg([ ".gg",
 		  "gg.",
-		  "..." ]) ),
+		  "..." ]), (0,3) ),
 
     (#"J" , chg([ "b..",
 		  "bbb",
-		  "..." ]) ),
+		  "..." ]), (0,3) ),
 
     (#"L" , chg([ "..o",
 		  "ooo",
-		  "..." ]) ),
+		  "..." ]), (0,3) ),
 
     (#"T" , chg([ ".m.",
 		  "mmm",
-		  "..." ]) )
+		  "..." ]), (0,3) )
 ]
+
+fun sub vec r c =
+	    Vector.sub(Vector.sub(vec, r), c)
+
+fun update vec r c element =
+    let val vec_row_original = Vector.sub(vec, r)
+	val vec_row_updated = Vector.update(vec_row_original, c, element)
+    in Vector.update(vec, r, vec_row_updated)
+    end
+
 
 val print_arr = 
     Vector.app (fn array => (Vector.app (fn str => print (str ^ " ")) array;
@@ -72,14 +84,7 @@ fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
 fun rotate_arr matrix =
-    let fun sub vec r c =
-	    Vector.sub(Vector.sub(vec, r), c)
-	fun update vec r c element =
-	    let val vec_row_original = Vector.sub(vec, r)
-		val vec_row_updated = Vector.update(vec_row_original, c, element)
-	    in Vector.update(vec, r, vec_row_updated)
-	    end
-	val M = Vector.length matrix
+    let val M = Vector.length matrix
 	val N = Vector.length (Vector.sub (matrix, 0))
 	val firstElement = sub matrix 0 0 
 	val returnInitial = Vector.tabulate 
@@ -95,53 +100,66 @@ fun rotate_arr matrix =
 	   matrix 
     end  
 
-fun process_cmd_lst cmds =
-    case cmds of
-	[] => ask_for_input ()
-      | (cmd::cmds') => (launch_cmd cmd cmds'; 
-			 process_cmd_lst cmds')
+(* datatype direction = Down | Left | Right
 
-and launch_cmd cmd cmds = 
-    let fun bk f = (f; process_cmd_lst cmds) in
-	case Char.fromString cmd of
-	    SOME #"q" => (OS.Process.exit OS.Process.success;
+fun move direction =
+    Ve   *)
+    
+
+fun place_block_in_arr block (x,y) =
+    Vector.foldli
+	(fn (r, blockRow, returnAcc) =>
+	    Vector.foldli
+		(fn (c, element, returnAcc') =>
+		    if element <> "."
+		    then update returnAcc' (r+x) (c+y) 
+				(String.map Char.toUpper element)
+		    else returnAcc')
+		returnAcc
+		blockRow)
+	(!arr)
+	block
+
+fun launch_cmd cmds = 
+    let fun bk f cmds = (f; launch_cmd cmds) in
+	case cmds of
+	    [] => ask_for_input ()
+	  | (#"q"::_) => (OS.Process.exit OS.Process.success;
 			  OS.Process.success)
-	  | SOME #"p" => bk (print_arr (!arr))
-	  | SOME #"g" => bk (ask_given())
-	  | SOME #"c" => bk (empty_arr())
-	  | SOME #"?" => (case explode cmd of
-			      (_::(#"s")::_) => bk (print_score())
-			    | (_::(#"n")::_) => bk (print_lines()) 
-			    | _ => process_cmd_lst(cmds))
-	  | SOME #"(" => bk (cur_tetra := rotate_arr 
-					      (rotate_arr   
-						   (rotate_arr (!cur_tetra)))) 
-	  | SOME #")" => bk (cur_tetra := rotate_arr (!cur_tetra))
-	  | SOME #";" => bk (print "\n")
-	  | SOME #"t" => bk (print_arr (!cur_tetra))
-	  | SOME #"s" => bk (clear_line())
-	  | _ => check_tetra_gen cmd cmds
+	  | (#"p"::r) => bk (print_arr (!arr)) r
+	  | (#"P"::r) => bk (print_arr (!arr)) r
+	  | (#"g"::r) => bk (ask_given()) r
+	  | (#"c"::r) => bk (empty_arr()) r
+	  | ((#"?")::(#"s")::r) => bk (print_score()) r
+	  | ((#"?")::(#"n")::r) => bk (print_lines()) r
+	  | (#"("::r) => bk (cur_tetra := 
+			     rotate_arr 
+				 (rotate_arr   
+				      (rotate_arr (!cur_tetra)))) r
+	  | (#")"::r) => bk (cur_tetra := rotate_arr (!cur_tetra)) r
+	  | (#";"::r) => bk (print "\n") r
+	  | (#"t"::r) => bk (print_arr (!cur_tetra)) r
+	  | (#"s"::r) => bk (clear_line()) r
+	  | _ => check_tetra_gen cmds
     end
 
-and check_tetra_gen cmd cmds =
-    let fun bk f = (f; process_cmd_lst cmds) 
-	fun assoc x xs =
-	    case (x, xs) of
-		(NONE, _) => NONE
-	      | (_, []) => NONE
-	      | (SOME y, (z,w)::xs') => if y = z
-					then SOME w
-					else assoc x xs'
+and check_tetra_gen cmds =
+    let fun assoc _ [] = launch_cmd (tl cmds)
+	  | assoc x ((z,w,l)::xs') = if x = z
+				 then (cur_tetra := w;
+				       cur_tetra_loc := l;
+				       arr := place_block_in_arr w l;
+				       launch_cmd (tl cmds))
+				 else assoc x xs'
     in
-	case assoc (Char.fromString cmd) tetra of
-	    SOME y => bk (cur_tetra := y)
-	  | NONE => process_cmd_lst cmds
+	assoc (hd cmds) tetra
     end 
 
 and ask_for_input () =
     case TextIO.inputLine TextIO.stdIn of
 	NONE => ask_for_input ()
-      | SOME x => process_cmd_lst(String.tokens Char.isSpace x)
+      | SOME xs => launch_cmd (
+		      List.filter (not o Char.isSpace) (explode xs))
 				 
 fun main (prog_name: string, args: string list) =
     ask_for_input ()
