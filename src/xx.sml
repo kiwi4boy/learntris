@@ -85,7 +85,7 @@ fun print_score () =
 fun print_lines () =
     print (Int.toString(!lines) ^ "\n")
 
-fun double_foldli f initial target = 
+fun double_foldli f initial = 
     Vector.foldli
 	(fn (r, row, returnAcc) =>
 	    Vector.foldli
@@ -94,7 +94,7 @@ fun double_foldli f initial target =
 		returnAcc
 		row)
 	initial
-	target
+	
 
 fun rotate_arr matrix =
     let val M = Vector.length matrix
@@ -118,34 +118,28 @@ fun place_block_in_arr block (x,y) =
 datatype direction = Down | Left | Right
 
 fun move direction =
-    let val new_loc = 
+    let val (x2,y2) = 
 	    case (direction, (!cur_tetra_loc)) of
 		(Down, (x,y)) => (x+1,y)
 	      | (Left, (x,y)) => (x,y-1)
 	      | (Right, (x,y)) => (x,y+1)
 	fun aux f acc e = 
-	    if not acc
-	    then acc
-	    else if e <> "."
-	    then f ()
-	    else true
+	    if not acc then acc
+	    else if e <> "." then f() else true
 	fun newLoc_is_valid_f (r,c,e,acc) =
-	    case new_loc of
-		(x,y) => aux (fn () =>
-				 r+x >= 0 andalso r+x < x_dim andalso
-				 c+y >= 0 andalso c+y < y_dim) acc e
+	    aux (fn () =>
+		    r+x2 >= 0 andalso r+x2 < x_dim andalso
+		    c+y2 >= 0 andalso c+y2 < y_dim) acc e
 	fun newLoc_is_valid () =
 	    double_foldli newLoc_is_valid_f true (!cur_tetra)
 	fun newLoc_do_not_collide_f (r,c,e,acc) =
-	    case new_loc of
-		(x,y) => aux (fn () =>
-				 sub (!arr) (r+x) (c+y) = ".") acc e
+	    aux (fn () => sub (!arr) (r+x2) (c+y2) = ".") acc e
 	fun newLoc_do_not_collide () =
 	    double_foldli newLoc_do_not_collide_f true (!cur_tetra)
 	fun is_valid_move () = 
 	    newLoc_is_valid () andalso newLoc_do_not_collide ()
     in if is_valid_move ()
-       then (cur_tetra_loc := new_loc)
+       then (cur_tetra_loc := (x2,y2))
        else (cur_tetra_loc := (!cur_tetra_loc))
     end
 
@@ -180,19 +174,21 @@ fun launch_cmd cmds =
 
 and check_tetra_gen cmds =
     let fun assoc _ [] = launch_cmd (tl cmds)
-	  | assoc x ((z,w,l)::xs') = if x = z
-				 then (cur_tetra := w;
-				       cur_tetra_loc := l;
-				       launch_cmd (tl cmds))
-				 else assoc x xs'
+	  | assoc x ((z,w,l)::xs') = 
+	    if x = z then (cur_tetra := w;
+			   cur_tetra_loc := l;
+			   launch_cmd (tl cmds))
+	    else assoc x xs'
     in assoc (hd cmds) tetra
     end 
 
 and ask_for_input () =
     case TextIO.inputLine TextIO.stdIn of
 	NONE => ask_for_input ()
-      | SOME xs => launch_cmd (
-		      List.filter (not o Char.isSpace) (explode xs))
+      | SOME xs => launch_cmd 
+		       (List.filter 
+			    (not o Char.isSpace) 
+			    (explode xs))
 				 
 fun main (prog_name: string, args: string list) =
     ask_for_input ()
