@@ -1415,3 +1415,652 @@ val it = () : unit
 xx.sml:178.11 Warning: calling polyEqual
 
 Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:178.11 Warning: calling polyEqual
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:159.23-162.34 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: string vector vector ref * string vector vector
+  operand:         string vector vector ref * 
+                   ('Z vector vector -> 'Z vector vector)
+  in expression:
+    cur_tetra := rotate_arr
+xx.sml:159.23-162.34 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: (_ vector vector -> _) * ('Z -> _ vector vector)
+  operand:         (_ vector vector -> _) * string vector vector
+  in expression:
+    cur_tetra := rotate_arr o rotate_arr o rotate_arr (! cur_tetra)
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- 
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:160.10-162.34 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: ('Z vector vector -> 'Z vector vector) * 
+                   ('Y -> 'Z vector vector)
+  operand:         ('Z vector vector -> 'Z vector vector) * 
+                   string vector vector
+  in expression:
+    rotate_arr o rotate_arr o rotate_arr (! cur_tetra)
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:176.11 Warning: calling polyEqual
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:174.11 Warning: calling polyEqual
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:174.11 Warning: calling polyEqual
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:166.19 Error: syntax error: inserting  LPAREN
+
+uncaught exception Compile [Compile: "syntax error"]
+  raised at: ../compiler/Parse/main/smlfile.sml:15.24-15.46
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:166.23-166.47 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: (string vector vector -> unit) * 
+                   ('Z -> string vector vector)
+  operand:         (string vector vector -> unit) * string vector vector
+  in expression:
+    print_arr o ! cur_tetra
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:166.23-166.46 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: string vector vector
+  operand:         'Z ref -> 'Z
+  in expression:
+    print_arr !
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:166.23-166.46 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: string vector vector
+  operand:         'Z ref -> 'Z
+  in expression:
+    print_arr !
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:174.11 Warning: calling polyEqual
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:65.34-65.71 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: ('Z option -> 'Z) * ('Y -> 'Z option)
+  operand:         ('Z option -> 'Z) * string option
+  in expression:
+    valOf o TextIO.inputLine TextIO.stdIn
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:174.11 Warning: calling polyEqual
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:174.11 Warning: calling polyEqual
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:176.13-181.35 Error: duplicate variable in pattern(s): x
+xx.sml:181.17-181.20 Error: unbound type constructor: xs'
+xx.sml:181.30 Error: unbound variable or constructor: x
+xx.sml:181.32-181.35 Error: unbound variable or constructor: xs'
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:105.13-105.20 Error: can't find function arguments in clause
+xx.sml:109.35-109.55 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: char -> char
+  operand:         char -> char -> char
+  in expression:
+    String.map convert
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- 
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:109.35-109.55 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: char -> char
+  operand:         unit -> char -> char
+  in expression:
+    String.map convert
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:109.35-109.57 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: char -> char
+  operand:         unit -> char -> char
+  in expression:
+    String.map convert
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:152.23-152.37 Error: operator is not a function [tycon mismatch]
+  operator: unit
+  in expression:
+    print_mixed ()
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+val x_dim = 22 : int
+val y_dim = 10 : int
+val empty_row = #[".",".",".",".",".",".",".",".",".","."] : string vector
+val empty_arr = <hidden-value> : string vector vector
+val arr =
+  ref
+    #[#[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],...]
+  : string vector vector ref
+val score = ref 0 : int ref
+val lines = ref 0 : int ref
+val chg = fn : string list -> string vector vector
+val cur_tetra = ref #[#[]] : string vector vector ref
+val cur_tetra_loc = ref (0,0) : (int * int) ref
+val tetra =
+  [(#"I",
+    #[#[".",".",".","."],#["c","c","c","c"],#[".",".",".","."],
+     #[".",".",".","."]],(0,3)),(#"O",#[#["y","y"],#["y","y"]],(0,4)),
+   (#"Z",#[#["r","r","."],#[".","r","r"],#[".",".","."]],(0,3)),
+   (#"S",#[#[".","g","g"],#["g","g","."],#[".",".","."]],(0,3)),
+   (#"J",#[#["b",".","."],#["b","b","b"],#[".",".","."]],(0,3)),
+   (#"L",#[#[".",".","o"],#["o","o","o"],#[".",".","."]],(0,3)),
+   (#"T",#[#[".","m","."],#["m","m","m"],#[".",".","."]],(0,3))]
+  : (char * string vector vector * (int * int)) list
+val sub = fn : 'a vector vector -> int -> int -> 'a
+val update = fn : 'a vector vector -> int -> int -> 'a -> 'a vector vector
+val print_arr = fn : string vector vector -> unit
+val ask_given = fn : unit -> unit
+val empty_arr = fn : unit -> unit
+val line_is_full = fn : string vector -> bool
+val clear_line = fn : unit -> unit
+val print_score = fn : unit -> unit
+val print_lines = fn : unit -> unit
+val double_foldli = fn
+  : (int * int * 'a * 'b -> 'b) -> 'b -> 'a vector vector -> 'b
+val rotate_arr = fn : 'a vector vector -> 'a vector vector
+datatype upperlowercase = Lowercase | Uppercase
+val place_block_in_arr = fn
+  : string vector vector
+    -> int * int -> upperlowercase -> string vector vector
+datatype direction = Down | Left | Right
+val move = fn : direction -> unit
+val print_mixed = () : unit
+val launch_cmd = fn : char list -> Word32.word
+val check_tetra_gen = fn : char list -> Word32.word
+val ask_for_input = fn : unit -> Word32.word
+val main = fn : string * string list -> Word32.word
+val it = () : unit
+- 
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+0
+0
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+. . . . . . . . . . 
+val x_dim = 22 : int
+val y_dim = 10 : int
+val empty_row = #[".",".",".",".",".",".",".",".",".","."] : string vector
+val empty_arr = <hidden-value> : string vector vector
+val arr =
+  ref
+    #[#[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],...]
+  : string vector vector ref
+val score = ref 0 : int ref
+val lines = ref 0 : int ref
+val chg = fn : string list -> string vector vector
+val cur_tetra = ref #[#[]] : string vector vector ref
+val cur_tetra_loc = ref (0,0) : (int * int) ref
+val tetra =
+  [(#"I",
+    #[#[".",".",".","."],#["c","c","c","c"],#[".",".",".","."],
+     #[".",".",".","."]],(0,3)),(#"O",#[#["y","y"],#["y","y"]],(0,4)),
+   (#"Z",#[#["r","r","."],#[".","r","r"],#[".",".","."]],(0,3)),
+   (#"S",#[#[".","g","g"],#["g","g","."],#[".",".","."]],(0,3)),
+   (#"J",#[#["b",".","."],#["b","b","b"],#[".",".","."]],(0,3)),
+   (#"L",#[#[".",".","o"],#["o","o","o"],#[".",".","."]],(0,3)),
+   (#"T",#[#[".","m","."],#["m","m","m"],#[".",".","."]],(0,3))]
+  : (char * string vector vector * (int * int)) list
+val sub = fn : 'a vector vector -> int -> int -> 'a
+val update = fn : 'a vector vector -> int -> int -> 'a -> 'a vector vector
+val print_arr = fn : string vector vector -> unit
+val ask_given = fn : unit -> unit
+val empty_arr = fn : unit -> unit
+val line_is_full = fn : string vector -> bool
+val clear_line = fn : unit -> unit
+val print_score = () : unit
+val print_lines = () : unit
+val double_foldli = fn
+  : (int * int * 'a * 'b -> 'b) -> 'b -> 'a vector vector -> 'b
+val rotate_arr = fn : 'a vector vector -> 'a vector vector
+datatype upperlowercase = Lowercase | Uppercase
+val place_block_in_arr = fn
+  : string vector vector
+    -> int * int -> upperlowercase -> string vector vector
+datatype direction = Down | Left | Right
+val move = fn : direction -> unit
+val print_mixed = () : unit
+val launch_cmd = fn : char list -> Word32.word
+val check_tetra_gen = fn : char list -> Word32.word
+val ask_for_input = fn : unit -> Word32.word
+val main = fn : string * string list -> Word32.word
+val it = () : unit
+- 
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+val x_dim = 22 : int
+val y_dim = 10 : int
+val empty_row = #[".",".",".",".",".",".",".",".",".","."] : string vector
+val empty_arr = <hidden-value> : string vector vector
+val arr =
+  ref
+    #[#[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],...]
+  : string vector vector ref
+val score = ref 0 : int ref
+val lines = ref 0 : int ref
+val chg = fn : string list -> string vector vector
+val cur_tetra = ref #[#[]] : string vector vector ref
+val cur_tetra_loc = ref (0,0) : (int * int) ref
+val tetra =
+  [(#"I",
+    #[#[".",".",".","."],#["c","c","c","c"],#[".",".",".","."],
+     #[".",".",".","."]],(0,3)),(#"O",#[#["y","y"],#["y","y"]],(0,4)),
+   (#"Z",#[#["r","r","."],#[".","r","r"],#[".",".","."]],(0,3)),
+   (#"S",#[#[".","g","g"],#["g","g","."],#[".",".","."]],(0,3)),
+   (#"J",#[#["b",".","."],#["b","b","b"],#[".",".","."]],(0,3)),
+   (#"L",#[#[".",".","o"],#["o","o","o"],#[".",".","."]],(0,3)),
+   (#"T",#[#[".","m","."],#["m","m","m"],#[".",".","."]],(0,3))]
+  : (char * string vector vector * (int * int)) list
+val sub = fn : 'a vector vector -> int -> int -> 'a
+val update = fn : 'a vector vector -> int -> int -> 'a -> 'a vector vector
+val print_arr = fn : string vector vector -> unit
+val ask_given = fn : unit -> unit
+val empty_arr = fn : unit -> unit
+val line_is_full = fn : string vector -> bool
+val clear_line = fn : unit -> unit
+val print_score = fn : unit -> unit
+val print_lines = fn : unit -> unit
+val double_foldli = fn
+  : (int * int * 'a * 'b -> 'b) -> 'b -> 'a vector vector -> 'b
+val rotate_arr = fn : 'a vector vector -> 'a vector vector
+datatype upperlowercase = Lowercase | Uppercase
+val place_block_in_arr = fn
+  : string vector vector
+    -> int * int -> upperlowercase -> string vector vector
+datatype direction = Down | Left | Right
+val move = fn : direction -> unit
+val print_mixed = fn : unit -> unit
+val launch_cmd = fn : char list -> Word32.word
+val check_tetra_gen = fn : char list -> Word32.word
+val ask_for_input = fn : unit -> Word32.word
+val main = fn : string * string list -> Word32.word
+val it = () : unit
+- 
+
+Process sml finished
+Standard ML of New Jersey v110.76 [built: Sun Jul 14 09:59:19 2013]
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:151.1 Error: syntax error: inserting  END
+
+uncaught exception Compile [Compile: "syntax error"]
+  raised at: ../compiler/Parse/main/smlfile.sml:15.24-15.46
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+[autoloading]
+[library $SMLNJ-BASIS/basis.cm is stable]
+[autoloading done]
+xx.sml:146.14-146.16 Error: unbound type constructor: xs
+xx.sml:146.34-146.36 Error: unbound variable or constructor: xs
+xx.sml:147.6-147.24 Error: can't find function arguments in clause
+xx.sml:148.6-148.24 Error: unbound variable or constructor: place_block_on_arr
+xx.sml:149.27-149.52 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: string vector vector ref * string vector vector
+  operand:         string vector vector ref * ('Z -> _)
+  in expression:
+    arr := stamp_block_on_arr
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:147.6-147.24 Error: can't find function arguments in clause
+xx.sml:148.6-148.24 Error: unbound variable or constructor: place_block_on_arr
+xx.sml:149.27-149.52 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: string vector vector ref * string vector vector
+  operand:         string vector vector ref * ('Z -> _)
+  in expression:
+    arr := stamp_block_on_arr
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:148.6-148.24 Error: unbound variable or constructor: place_block_on_arr
+xx.sml:149.27-149.52 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: string vector vector ref * string vector vector
+  operand:         string vector vector ref * (unit -> _)
+  in expression:
+    arr := stamp_block_on_arr
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+xx.sml:149.27-149.52 Error: operator and operand don't agree [tycon mismatch]
+  operator domain: string vector vector ref * string vector vector
+  operand:         string vector vector ref * (unit -> string vector vector)
+  in expression:
+    arr := stamp_block_on_arr
+
+uncaught exception Error
+  raised at: ../compiler/TopLevel/interact/evalloop.sml:66.19-66.27
+             ../compiler/TopLevel/interact/evalloop.sml:44.55
+             ../compiler/TopLevel/interact/evalloop.sml:296.17-296.20
+- use "xx.sml";
+[opening xx.sml]
+val x_dim = 22 : int
+val y_dim = 10 : int
+val empty_row = #[".",".",".",".",".",".",".",".",".","."] : string vector
+val empty_arr = <hidden-value> : string vector vector
+val arr =
+  ref
+    #[#[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],
+     #[".",".",".",".",".",".",".",".",".","."],...]
+  : string vector vector ref
+val score = ref 0 : int ref
+val lines = ref 0 : int ref
+val chg = fn : string list -> string vector vector
+val cur_tetra = ref #[#[]] : string vector vector ref
+val cur_tetra_loc = ref (0,0) : (int * int) ref
+val tetra =
+  [(#"I",
+    #[#[".",".",".","."],#["c","c","c","c"],#[".",".",".","."],
+     #[".",".",".","."]],(0,3)),(#"O",#[#["y","y"],#["y","y"]],(0,4)),
+   (#"Z",#[#["r","r","."],#[".","r","r"],#[".",".","."]],(0,3)),
+   (#"S",#[#[".","g","g"],#["g","g","."],#[".",".","."]],(0,3)),
+   (#"J",#[#["b",".","."],#["b","b","b"],#[".",".","."]],(0,3)),
+   (#"L",#[#[".",".","o"],#["o","o","o"],#[".",".","."]],(0,3)),
+   (#"T",#[#[".","m","."],#["m","m","m"],#[".",".","."]],(0,3))]
+  : (char * string vector vector * (int * int)) list
+val sub = fn : 'a vector vector -> int -> int -> 'a
+val update = fn : 'a vector vector -> int -> int -> 'a -> 'a vector vector
+val print_arr = fn : string vector vector -> unit
+val ask_given = fn : unit -> unit
+val empty_arr = fn : unit -> unit
+val line_is_full = fn : string vector -> bool
+val clear_line = fn : unit -> unit
+val print_score = fn : unit -> unit
+val print_lines = fn : unit -> unit
+val double_foldli = fn
+  : (int * int * 'a * 'b -> 'b) -> 'b -> 'a vector vector -> 'b
+val rotate_arr = fn : 'a vector vector -> 'a vector vector
+datatype upperlowercase = Lowercase | Uppercase
+val place_block_in_arr = fn
+  : string vector vector
+    -> int * int -> upperlowercase -> string vector vector
+datatype direction = Down | Left | Right
+val move = fn : direction -> unit
+val hard_drop = fn : unit -> unit
+val print_mixed = fn : unit -> unit
+val launch_cmd = fn : char list -> Word32.word
+val check_tetra_gen = fn : char list -> Word32.word
+val ask_for_input = fn : unit -> Word32.word
+val main = fn : string * string list -> Word32.word
+val it = () : unit
+- 
+
+Process sml finished

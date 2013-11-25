@@ -57,20 +57,16 @@ fun update vec r c element =
 val print_arr = 
     Vector.app (fn array => (Vector.app (fn str => print (str ^ " ")) array;
 			    print "\n"))
-
-
-
 fun ask_given () =
     let fun ask_row () =
-	    String.tokens Char.isSpace (valOf (TextIO.inputLine TextIO.stdIn))
+	    String.tokens Char.isSpace ((valOf o TextIO.inputLine) TextIO.stdIn)
     in arr := (Vector.map (fn _ => Vector.fromList (ask_row())) (!arr))
     end
 	
 fun empty_arr () =
     arr := (Vector.map (fn _ => empty_row) (!arr))
 
-val line_is_full =
-    Vector.all (fn str => str <> ".") 
+val line_is_full = Vector.all (fn str => str <> ".") 
 
 fun clear_line () =
     arr := (Vector.map (fn str => if line_is_full str
@@ -79,11 +75,9 @@ fun clear_line () =
 				  empty_row)
 			    else str) (!arr))
 
-fun print_score () =
-    print (Int.toString(!score) ^ "\n")
+fun print_score () = print (Int.toString(!score) ^ "\n")
 
-fun print_lines () =
-    print (Int.toString(!lines) ^ "\n")
+fun print_lines () = print (Int.toString(!lines) ^ "\n")
 
 fun double_foldli f = 
     Vector.foldli
@@ -93,12 +87,10 @@ fun double_foldli f =
 		    f (r,c,element,returnAcc'))
 		returnAcc
 		row)
-	
-	
 
 fun rotate_arr matrix =
     let val M = Vector.length matrix
-	val N = Vector.length (Vector.sub (matrix, 0))
+	val N = (Vector.length o Vector.sub) (matrix, 0)
 	val firstElement = sub matrix 0 0 
 	val returnInitial = 
 	    Vector.tabulate 
@@ -107,10 +99,14 @@ fun rotate_arr matrix =
     in double_foldli update_acc returnInitial matrix
     end
 
-fun place_block_in_arr block (x,y) =
-    let fun update_acc (r,c,e,acc) =
+datatype upperlowercase = Uppercase | Lowercase
+
+fun place_block_in_arr block (x,y) ulcase =
+    let val convert = case ulcase of Uppercase => Char.toUpper
+				   | Lowercase => Char.toLower
+	fun update_acc (r,c,e,acc) =
 	    if e <> "."
-	    then update acc (r+x) (c+y) (String.map Char.toUpper e)
+	    then update acc (r+x) (c+y) (String.map convert e)
 	    else acc
     in double_foldli update_acc (!arr) block
     end
@@ -143,8 +139,18 @@ fun move direction =
        else (cur_tetra_loc := (!cur_tetra_loc))
     end
 
+fun hard_drop () =
+    let val list_of_down = List.tabulate (x_dim, (fn _ => Down))
+	fun aux l = case l of 
+			[] => () 
+		      | (x::xs) => (move x; aux xs)
+	fun stamp_block_on_arr () =
+	    place_block_in_arr (!cur_tetra) (!cur_tetra_loc) Lowercase
+    in (aux list_of_down; arr := stamp_block_on_arr ())
+    end
+
 fun print_mixed () =
-    print_arr (place_block_in_arr (!cur_tetra) (!cur_tetra_loc))
+    print_arr (place_block_in_arr (!cur_tetra) (!cur_tetra_loc) Uppercase)
 
 fun launch_cmd cmds = 
     let fun bk f cmds = (f; launch_cmd cmds) in
@@ -153,28 +159,27 @@ fun launch_cmd cmds =
 	  | (#"q"::_) => (OS.Process.exit OS.Process.success;
 			  OS.Process.success)
 	  | (#"p"::r) => bk (print_arr (!arr)) r
-	  | (#"P"::r) => bk (print_mixed ()) r
+	  | (#"P"::r) => bk (print_mixed() ) r
 	  | (#"g"::r) => bk (ask_given()) r
 	  | (#"c"::r) => bk (empty_arr()) r
 	  | ((#"?")::(#"s")::r) => bk (print_score()) r
 	  | ((#"?")::(#"n")::r) => bk (print_lines()) r
-	  | (#"("::r) => bk (cur_tetra := 
-			     rotate_arr 
-				 (rotate_arr   
-				      (rotate_arr (!cur_tetra)))) r
+	  | (#"("::r) => bk (cur_tetra := (rotate_arr o rotate_arr o  
+					   rotate_arr o !) cur_tetra) r
 	  | (#")"::r) => bk (cur_tetra := rotate_arr (!cur_tetra)) r
 	  | (#"<"::r) => bk (move Left) r
 	  | (#">"::r) => bk (move Right) r
 	  | (#"v"::r) => bk (move Down) r
+	  | (#"V"::r) => bk (hard_drop()) r
 	  | (#";"::r) => bk (print "\n") r
-	  | (#"t"::r) => bk (print_arr (!cur_tetra)) r
+	  | (#"t"::r) => bk (print_arr  (!cur_tetra)) r
 	  | (#"s"::r) => bk (clear_line()) r
 	  | _ => check_tetra_gen cmds
     end
 
-and check_tetra_gen cmds =
+ and check_tetra_gen cmds =
     let fun assoc _ [] = launch_cmd (tl cmds)
-	  | assoc x ((z,w,l)::xs') = 
+	  | assoc (x:char) ((z:char,w,l)::xs') = 
 	    if x = z then (cur_tetra := w;
 			   cur_tetra_loc := l;
 			   launch_cmd (tl cmds))
@@ -186,9 +191,8 @@ and ask_for_input () =
     case TextIO.inputLine TextIO.stdIn of
 	NONE => ask_for_input ()
       | SOME xs => launch_cmd 
-		       (List.filter 
-			    (not o Char.isSpace) 
-			    (explode xs))
+		       (List.filter (not o Char.isSpace) 
+				    (explode xs))
 				 
 fun main (prog_name: string, args: string list) =
     ask_for_input ()
