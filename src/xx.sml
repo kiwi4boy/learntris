@@ -1,18 +1,56 @@
+
+
+
+fun chg lst = 
+
+
+structure DblStrVector = struct
+
+type dbl_str_vector = string vector vector
+
+fun fromStringList strlst =
+    let fun getInnerList str =
+	    Vector.fromList (map Char.toString (explode (str)))
+    in Vector.fromList (map getInnerList strlst)
+    end
+
+fun sub vec r c = Vector.sub(Vector.sub(vec, r), c)
+
+fun update vec r c element =
+    let val vecRowOriginal = Vector.sub(vec, r)
+	val vecRowUpdated = Vector.update(vecRowOriginal, c, element)
+    in Vector.update(vec, r, vecRowUpdated)
+    end
+
+val print = 
+    Vector.app (fn array => (Vector.app (fn str => print (str ^ " ")) array;
+			    print "\n"))
+
+
+
+end
+
+val chg = DblStrVector.fromStringList
+
+structure Game = struct
+val score = ref 0
+val lines = ref 0
+
+end
+
+structure Board = struct
 val x_dim = 22
 val y_dim = 10
 val empty_row = Vector.tabulate (y_dim, (fn _ => "."))
 val empty_arr = Vector.tabulate (x_dim, (fn _ => empty_row))
 val arr = ref (empty_arr)
-val score = ref 0
-val lines = ref 0
 
-fun chg lst = 
-    Vector.fromList 
-	(map (fn str => Vector.fromList(map Char.toString (explode(str))))
-	     lst)
 
-val cur_tetra = ref (chg [""])
-val cur_tetra_loc = ref (0,0)
+end
+
+
+
+structure Tetramino = struct
 
 val tetra = [
     (#"I" , chg([ "....",
@@ -44,19 +82,17 @@ val tetra = [
 		  "..." ]), (0,3) )
 ]
 
-fun sub vec r c =
-	    Vector.sub(Vector.sub(vec, r), c)
+val cur_tetra = ref (chg [""])
+val cur_tetra_loc = ref (0,0)
 
-fun update vec r c element =
-    let val vec_row_original = Vector.sub(vec, r)
-	val vec_row_updated = Vector.update(vec_row_original, c, element)
-    in Vector.update(vec, r, vec_row_updated)
-    end
+end
 
 
-val print_arr = 
-    Vector.app (fn array => (Vector.app (fn str => print (str ^ " ")) array;
-			    print "\n"))
+
+
+
+
+
 fun ask_given () =
     let fun ask_row () =
 	    String.tokens Char.isSpace ((valOf o TextIO.inputLine) TextIO.stdIn)
@@ -116,9 +152,9 @@ datatype direction = Down | Left | Right
 fun move direction =
     let val (x2,y2) = 
 	    case (direction, (!cur_tetra_loc)) of
-		(Down, (x,y)) => (x+1,y)
-	      | (Left, (x,y)) => (x,y-1)
-	      | (Right, (x,y)) => (x,y+1)
+		(Down , (x,y)) => (x+1,y)
+	      | (Left , (x,y)) => (x,y-1)
+	      | (Right , (x,y)) => (x,y+1)
 	fun aux f acc e = 
 	    if not acc then acc
 	    else if e <> "." then f() else true
@@ -159,7 +195,7 @@ fun launch_cmd cmds =
 	  | (#"q"::_) => (OS.Process.exit OS.Process.success;
 			  OS.Process.success)
 	  | (#"p"::r) => bk (print_arr (!arr)) r
-	  | (#"P"::r) => bk (print_mixed() ) r
+	  | (#"P"::r) => bk (print_mixed()) r
 	  | (#"g"::r) => bk (ask_given()) r
 	  | (#"c"::r) => bk (empty_arr()) r
 	  | ((#"?")::(#"s")::r) => bk (print_score()) r
@@ -172,7 +208,7 @@ fun launch_cmd cmds =
 	  | (#"v"::r) => bk (move Down) r
 	  | (#"V"::r) => bk (hard_drop()) r
 	  | (#";"::r) => bk (print "\n") r
-	  | (#"t"::r) => bk (print_arr  (!cur_tetra)) r
+	  | (#"t"::r) => bk (print_arr (!cur_tetra)) r
 	  | (#"s"::r) => bk (clear_line()) r
 	  | _ => check_tetra_gen cmds
     end
