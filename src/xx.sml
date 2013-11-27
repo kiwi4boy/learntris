@@ -66,6 +66,7 @@ val curTetra = ref (chg [""])
 val curTetraLoc = ref (0,0)
 val curTetraRotation = ref 0
 val curTetraType = ref #"0"
+type loc = int * int 
 
 end (* Tetramino *)
 
@@ -191,7 +192,7 @@ val wallKickOffsets_O = [
 
 datatype direction = Down | Left | Right
 
-fun locIsValid (x2,y2) =
+fun locIsValid (x2,y2) block =
     let fun aux f acc e =
 	    if not acc then acc
 	    else if e <> "." then f () else true
@@ -200,11 +201,11 @@ fun locIsValid (x2,y2) =
 		    r+x2 >= 0 andalso r+x2 < Board.x_dim andalso
 		    c+y2 >= 0 andalso c+y2 < Board.y_dim) acc e
 	fun newLocDoNotCollideWalls () =
-	    DblStrVector.foldli doNotCollideWalls true (!Tetramino.curTetra)
+	    DblStrVector.foldli doNotCollideWalls true block
 	fun doNotCollideBlocks (r,c,e,acc) =
-	    aux (fn () => DblStrVector.sub (!(Board.arr)) (r+x2) (c+y2) = ".") acc e
+	    aux (fn () => DblStrVector.sub (!Board.arr) (r+x2) (c+y2) = ".") acc e
 	fun newLocDoNotCollideBlocks () =
-	    DblStrVector.foldli doNotCollideBlocks true (!Tetramino.curTetra)
+	    DblStrVector.foldli doNotCollideBlocks true block
     in newLocDoNotCollideWalls () andalso newLocDoNotCollideBlocks ()
     end
 
@@ -214,7 +215,7 @@ fun move direction =
 		(Down , (x,y)) => (x+1,y)
 	      | (Left , (x,y)) => (x,y-1)
 	      | (Right , (x,y)) => (x,y+1)
-    in if locIsValid (x2,y2) 
+    in if locIsValid (x2,y2) (!Tetramino.curTetra)
        then Tetramino.curTetraLoc := (x2,y2)
        else ()
     end
@@ -252,7 +253,8 @@ fun rotate rotate_dir =
 	val offsets = assocList (!curTetraRotation, newTetraRotation) curWallKickOffsets
 	val candOffset = 
 	    List.find (fn offset => case (!curTetraLoc, offset) of
-					 ((x, y), (x2, y2)) => locIsValid(x+x2,y+y2))
+					 ((x,y), (x2,y2)) => 
+						locIsValid (x+x2,y+y2) newTetra)
 		      offsets
     in case candOffset of
 	 NONE => ()
@@ -316,4 +318,4 @@ fun main (progName: string, args: string list) = askInput ()
 
 end
 
-val _ = SMLofNJ.exportFn ("xx", Shell.main)
+(* val _ = SMLofNJ.exportFn ("xx", Shell.main) *)
