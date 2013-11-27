@@ -65,6 +65,7 @@ structure Tetramino = struct
 val curTetra = ref (chg [""])
 val curTetraLoc = ref (0,0)
 val curTetraRotation = ref 0
+val curTetraType = ref #"0"
 
 end (* Tetramino *)
 
@@ -166,6 +167,28 @@ val wallKickOffsets = [
     ((0,3), [( 0, 0), ( 0, 1), ( 1, 1), (~2, 0), (~2, 1)])
 ]
 
+val wallKickOffsets_I = [
+    ((0,1), [( 0, 0), ( 0,~2), ( 0, 1), (~1,~2), ( 2, 1)]),
+    ((1,0), [( 0, 0), ( 0, 2), ( 0,~1), ( 1, 2), (~2,~1)]),
+    ((1,2), [( 0, 0), ( 0,~1), ( 0, 2), ( 2,~1), (~1, 2)]),
+    ((2,1), [( 0, 0), ( 0, 1), ( 0,~2), (~2, 1), ( 1,~2)]),
+    ((2,3), [( 0, 0), ( 0, 2), ( 0,~1), ( 1, 2), (~2,~1)]),
+    ((3,2), [( 0, 0), ( 0,~2), ( 0, 1), (~1,~2), ( 2, 1)]),
+    ((3,0), [( 0, 0), ( 0, 1), ( 0,~2), (~2, 1), ( 1,~2)]),
+    ((0,3), [( 0, 0), ( 0,~1), ( 0, 2), ( 2,~1), (~1, 2)])
+]
+
+val wallKickOffsets_O = [
+    ((0,1), [(0,0)]),
+    ((1,0), [(0,0)]),
+    ((1,2), [(0,0)]),
+    ((2,1), [(0,0)]),
+    ((2,3), [(0,0)]),
+    ((3,2), [(0,0)]),
+    ((3,0), [(0,0)]),
+    ((0,3), [(0,0)])
+]
+
 datatype direction = Down | Left | Right
 
 fun locIsValid (x2,y2) =
@@ -221,8 +244,12 @@ fun rotate rotate_dir =
 		((c,d), value)::xs' => if a = c andalso b = d then value
 				       else assocList (a,b) xs'
 	      | [] => []
-
-	val offsets = assocList (!curTetraRotation, newTetraRotation) wallKickOffsets
+	val curWallKickOffsets =
+	    case !curTetraType of
+		#"I" => wallKickOffsets_I
+	      | #"O" => wallKickOffsets_O
+	      | _ => wallKickOffsets
+	val offsets = assocList (!curTetraRotation, newTetraRotation) curWallKickOffsets
 	val candOffset = 
 	    List.find (fn offset => case (!curTetraLoc, offset) of
 					 ((x, y), (x2, y2)) => locIsValid(x+x2,y+y2))
@@ -272,6 +299,7 @@ fun launchCmd cmds =
 	  | assoc (x : char) ((z : char, w, l) :: xs') = 
 	    if x = z then (Tetramino.curTetra := w;
 			   Tetramino.curTetraLoc := l;
+			   Tetramino.curTetraType := x;
 			   launchCmd (tl cmds))
 	    else assoc x xs'
     in assoc (hd cmds) Tetramino.tetra
