@@ -64,6 +64,7 @@ structure Tetramino = struct
 
 val curTetra = ref (chg [""])
 val curTetraLoc = ref (0,0)
+val curTetraRotation = ref 0
 
 end (* Tetramino *)
 
@@ -154,16 +155,35 @@ val tetra = [
 		  "..." ]), (0,3) )
 ]
 
-datatype rotate_dir = Clockwise | CounterClockwise
-
-fun rotate rotate_dir = 
-    case rotate_dir of
-	Clockwise => curTetra := DblStrVector.rotate (!curTetra)
-      | CounterClockwise => curTetra := (DblStrVector.rotate o 
-					  DblStrVector.rotate o 
-					  DblStrVector.rotate) (!curTetra)
+val wallKickOffsets = [
+    ((0,1), [( 0, 0), ( 0,~1), ( 1,~1), (~2, 0), (~2,~1)]),
+    ((1,0), [( 0, 0), ( 0, 1), (~1, 1), ( 2, 0), ( 2, 1)]),
+    ((1,2), [( 0, 0), ( 0, 1), (~1, 1), ( 2, 0), ( 2, 1)]),
+    ((2,1), [( 0, 0), ( 0,~1), ( 1,~1), (~2, 0), (~2,~1)]),
+    ((2,3), [( 0, 0), ( 0, 1), ( 1, 1), (~2, 0), (~2, 1)]),
+    ((3,2), [( 0, 0), ( 0,~1), (~1,~1), ( 2, 0), ( 2,~1)]),
+    ((3,0), [( 0, 0), ( 0,~1), (~1,~1), ( 2, 0), ( 2,~1)]),
+    ((0,3), [( 0, 0), ( 0, 1), ( 1, 1), (~2, 0), (~2, 1)])
+]
 
 datatype direction = Down | Left | Right
+
+fun locIsValid (x2,y2) =
+    let fun aux f acc e =
+	    if not acc then acc
+	    else if e <> "." then f () else true
+	fun doNotCollideWalls (r,c,e,acc) =
+	    aux (fn () =>
+		    r+x2 >= 0 andalso r+x2 < Board.x_dim andalso
+		    c+y2 >= 0 andalso c+y2 < Board.y_dim) acc e
+	fun newLocDoNotCollideWalls () =
+	    DblStrVector.foldli doNotCollideWalls true (!Tetramino.curTetra)
+	fun doNotCollideBlocks (r,c,e,acc) =
+	    aux (fn () => DblStrVector.sub (!(Board.arr)) (r+x2) (c+y2) = ".") acc e
+	fun newLocDoNotCollideBlocks () =
+	    DblStrVector.foldli doNotCollideBlocks true (!Tetramino.curTetra)
+    in newLocDoNotCollideWalls () andalso newLocDoNotCollideBlocks ()
+    end
 
 fun move direction =
     let val (x2,y2) = 
@@ -171,24 +191,9 @@ fun move direction =
 		(Down , (x,y)) => (x+1,y)
 	      | (Left , (x,y)) => (x,y-1)
 	      | (Right , (x,y)) => (x,y+1)
-	fun aux f acc e = 
-	    if not acc then acc
-	    else if e <> "." then f() else true
-	fun checkNewLocBoundary (r,c,e,acc) =
-	    aux (fn () =>
-		    r+x2 >= 0 andalso r+x2 < Board.x_dim andalso
-		    c+y2 >= 0 andalso c+y2 < Board.y_dim) acc e
-	fun newLocIsValid () =
-	    DblStrVector.foldli checkNewLocBoundary true (!Tetramino.curTetra)
-	fun newLocIsEmpty (r,c,e,acc) =
-	    aux (fn () => DblStrVector.sub (!(Board.arr)) (r+x2) (c+y2) = ".") acc e
-	fun newLocDoNotCollide () =
-	    DblStrVector.foldli newLocIsEmpty true (!Tetramino.curTetra)
-	fun isValidMove () = 
-	    newLocIsValid () andalso newLocDoNotCollide ()
-    in if isValidMove ()
+    in if locIsValid (x2,y2) 
        then Tetramino.curTetraLoc := (x2,y2)
-       else Tetramino.curTetraLoc := (!Tetramino.curTetraLoc)
+       else ()
     end
 
 fun hard_drop () =
@@ -196,10 +201,41 @@ fun hard_drop () =
 	fun aux l = case l of 
 			[] => () 
 		      | (x::xs) => (move x; aux xs)
-
     in (aux downList; 
 	Board.stampBlockInArr (!Tetramino.curTetra) (!Tetramino.curTetraLoc))
     end
+
+datatype rotate_dir = Clockwise | CounterClockwise
+
+fun rotate rotate_dir = 
+    let val (newTetra, newTetraRotation) = 
+	    case rotate_dir of
+		Clockwise => (DblStrVector.rotate (!curTetra),
+			      (!curTetraRotation + 1) mod 4)
+	      | CounterClockwise => ((DblStrVector.rotate o 
+				      DblStrVector.rotate o 
+				      DblStrVector.rotate) (!curTetra),
+				     (!curTetraRotation - 1) mod 4)
+	fun assocList (a:int,b:int) xs =
+	    case xs of
+		((c,d), value)::xs' => if a = c andalso b = d then value
+				       else assocList (a,b) xs'
+	      | [] => []
+
+	val offsets = assocList (!curTetraRotation, newTetraRotation) wallKickOffsets
+	val candOffset = 
+	    List.find (fn offset => case (!curTetraLoc, offset) of
+					 ((x, y), (x2, y2)) => locIsValid(x+x2,y+y2))
+		      offsets
+    in case candOffset of
+	 NONE => ()
+	| SOME (x2,y2) => (curTetra := newTetra;
+			   curTetraLoc := (case !curTetraLoc of (x,y) => (x+x2,y+y2));
+			   curTetraRotation := newTetraRotation)
+    end
+					 
+				     
+
 end (* Tetramino *)
 
 
