@@ -254,7 +254,7 @@ fun rotate rotate_dir =
 	val candOffset = 
 	    List.find (fn offset => case (!curTetraLoc, offset) of
 					 ((x,y), (x2,y2)) => 
-						locIsValid (x+x2,y+y2) newTetra)
+					 locIsValid (x+x2,y+y2) newTetra)
 		      offsets
     in case candOffset of
 	 NONE => ()
